@@ -1,7 +1,8 @@
 const { Unauthorized, Conflict, NotFound } = require("http-errors");
 const { User } = require("../service/schemas/schemas");
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = "sadasdasdasdsa";
+require("dotenv").config();
+const SECRET_KEY = process.env.SECRET_KEY;
 
 async function currentUser(req, res, next) {
   try {
