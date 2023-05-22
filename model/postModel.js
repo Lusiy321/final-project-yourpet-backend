@@ -58,9 +58,7 @@ const postSchema = new Schema(
       default: null,
     },
     owner: {
-      type: Object,
-      default: User,
-      ref: "user",
+      type: User,
       require: true,
     },
   },

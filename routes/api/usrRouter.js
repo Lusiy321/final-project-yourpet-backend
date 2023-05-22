@@ -31,8 +31,8 @@ router.patch(
   usersController.updateSubscriptionUser
 );
 
-router.get("/google");
+router.get("/google", usersController.googleAuth);
 
-router.get("/google-redirect");
+router.get("/google-redirect", usersController.googleRedirect);
 
 module.exports = router;
