@@ -4,7 +4,7 @@ const {
   joiUserLoginSchema,
   joiUserSignUpSchema,
   joiUserSubscriptionSchema,
-} = require("../../model/model");
+} = require("../../model/userModel");
 const usersController = require("../../controller/userController");
 
 const router = express.Router();
@@ -30,5 +30,9 @@ router.patch(
   validation(joiUserSubscriptionSchema),
   usersController.updateSubscriptionUser
 );
+
+router.get("/google");
+
+router.get("/google-redirect");
 
 module.exports = router;

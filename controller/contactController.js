@@ -1,19 +1,18 @@
-const { Contact } = require("../model/model");
+const { Post } = require("../model/postModel");
 
 const get = async (req, res, next) => {
   try {
     const { _id: owner } = req.user;
     const { ...params } = req.query;
 
-    const result = await Contact.find(
+    const result = await Post.find(
       { owner, ...params },
       "-createdAt -updatedAt"
     );
-
     res.json({
       status: "success",
       code: 200,
-      data: { contact: result },
+      data: { post: result },
     });
   } catch (e) {
     res.status(404).json({
@@ -30,18 +29,18 @@ const getById = async (req, res, next) => {
   const { contactId } = req.params;
   const { _id: owner } = req.user;
   try {
-    const result = await Contact.findById({ _id: contactId, owner });
+    const result = await Post.findById({ _id: contactId, owner });
     if (result) {
       res.json({
         status: "success",
         code: 200,
-        data: { contact: result },
+        data: { post: result },
       });
     } else {
       res.status(404).json({
         status: "error",
         code: 404,
-        message: `Not found contact id: ${contactId}`,
+        message: `Not found post id: ${contactId}`,
         data: "Not Found",
       });
     }
@@ -49,7 +48,7 @@ const getById = async (req, res, next) => {
     res.status(404).json({
       status: "error",
       code: 404,
-      message: `Not found contact id: ${contactId}`,
+      message: `Not found post id: ${contactId}`,
       data: "Not Found",
     });
     next(e);
@@ -60,7 +59,7 @@ const create = async (req, res, next) => {
   const { name, email, phone } = req.body;
   const { _id: owner } = req.user;
   try {
-    const result = await Contact.create({ name, email, phone, owner });
+    const result = await Post.create({ name, email, phone, owner });
     if (!result) {
       return res.status(404).json({
         status: "error",
@@ -91,7 +90,7 @@ const update = async (req, res, next) => {
   const { name, email, phone } = req.body;
 
   try {
-    const result = await Contact.findByIdAndUpdate(
+    const result = await Post.findByIdAndUpdate(
       { _id: contactId, owner },
       { name, email, phone }
     );
@@ -141,7 +140,7 @@ const upStatus = async (req, res, next) => {
         data: "Not Found",
       });
     }
-    const result = await Contact.findByIdAndUpdate(
+    const result = await Post.findByIdAndUpdate(
       { _id: contactId, owner },
       { favorite }
     );
@@ -190,18 +189,18 @@ const remove = async (req, res, next) => {
         data: "Not Found",
       });
     }
-    const result = await Contact.findByIdAndRemove({ _id: contactId, owner });
+    const result = await Post.findByIdAndRemove({ _id: contactId, owner });
     if (result) {
       res.json({
         status: "success",
         code: 200,
-        data: { contact: result },
+        data: { post: result },
       });
     } else {
       res.status(404).json({
         status: "error",
         code: 404,
-        message: `Not found contact id: ${contactId}`,
+        message: `Not found post id: ${contactId}`,
         data: "Not Found",
       });
     }

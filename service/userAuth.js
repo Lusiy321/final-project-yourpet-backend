@@ -1,4 +1,4 @@
-const { User } = require("../model/model");
+const { User } = require("../model/userModel");
 const { Unauthorized } = require("http-errors");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();

@@ -8,7 +8,7 @@ const {
   upStatus,
 } = require("../../controller/contactController");
 const { userAuth, validation } = require("../../service/userAuth");
-const { postSchema } = require("../../model/model");
+const { postSchema } = require("../../model/userModel");
 
 const router = express.Router();
 
