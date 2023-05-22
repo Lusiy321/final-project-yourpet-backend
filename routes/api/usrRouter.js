@@ -1,10 +1,10 @@
 const express = require("express");
-const { validation, userAuth } = require("../../middlewares/userAuth");
+const { validation, userAuth } = require("../../service/userAuth");
 const {
   joiUserLoginSchema,
   joiUserSignUpSchema,
   joiUserSubscriptionSchema,
-} = require("../../service/schemas/schemas");
+} = require("../../model/model");
 const usersController = require("../../controller/userController");
 
 const router = express.Router();

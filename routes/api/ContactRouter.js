@@ -7,8 +7,8 @@ const {
   update,
   upStatus,
 } = require("../../controller/contactController");
-const { userAuth, validation } = require("../../middlewares/userAuth");
-const { contactsSchema } = require("../../service/schemas/schemas");
+const { userAuth, validation } = require("../../service/userAuth");
+const { postSchema } = require("../../model/model");
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.get("/", userAuth, get);
 
 router.get("/:contactId", userAuth, getById);
 
-router.post("/", userAuth, validation(contactsSchema), create);
+router.post("/", userAuth, validation(postSchema), create);
 
 router.delete("/:contactId", userAuth, remove);
 

@@ -8,7 +8,7 @@ const nameRegexp = /^[a-zA-Z. ']+$/;
 const phoneRegexp = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[ -./0-9]*$/;
 const bcrypt = require("bcryptjs");
 
-const contact = new Schema(
+const postSchema = new Schema(
   {
     name: {
       type: String,
@@ -41,7 +41,7 @@ const contact = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-const Contact = mongoose.model("contacts", contact);
+const Contact = mongoose.model("posts", postSchema);
 
 const usersSchema = new Schema(
   {
@@ -70,6 +70,20 @@ const usersSchema = new Schema(
       type: String,
       default: null,
     },
+    avatarURL: {
+      type: String,
+      required: true,
+      default: null,
+    },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      default: null,
+      required: [true, "Verify token is required"],
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -85,6 +99,7 @@ const joiUserLoginSchema = Joi.object({
   password: Joi.string().min(6).required(),
   email: Joi.string().pattern(emailRegexp).required(),
 });
+
 const joiUserSignUpSchema = Joi.object({
   name: Joi.string().pattern(nameRegexp).min(3).max(30).required(),
   password: Joi.string().min(6).required(),
@@ -95,7 +110,7 @@ const joiUserSignUpSchema = Joi.object({
 const joiUserSubscriptionSchema = Joi.object({
   subscription: Joi.string().valid("starter", "pro", "business"),
 });
-const User = mongoose.model("user", usersSchema);
+const User = mongoose.model("users", usersSchema);
 
 const contactsSchema = Joi.object({
   name: Joi.string().pattern(nameRegexp).min(3).max(30).required(),

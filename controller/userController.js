@@ -1,5 +1,5 @@
 const { Unauthorized, Conflict, NotFound } = require("http-errors");
-const { User } = require("../service/schemas/schemas");
+const { User } = require("../model/model");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const SECRET_KEY = process.env.SECRET_KEY;
