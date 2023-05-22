@@ -6,7 +6,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 async function currentUser(req, res, next) {
   try {
-    const { name, email, subscription } = req.user;
+    const { name, email } = req.user;
     res.json({
       status: "success",
       code: 200,
@@ -14,7 +14,6 @@ async function currentUser(req, res, next) {
         user: {
           name,
           email,
-          subscription,
         },
       },
     });

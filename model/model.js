@@ -10,25 +10,55 @@ const bcrypt = require("bcryptjs");
 
 const postSchema = new Schema(
   {
+    title: {
+      type: String,
+      minlength: 10,
+      maxlength: 60,
+      require: [true, "Set title for your post"],
+    },
     name: {
       type: String,
       minlength: 2,
-      maxlength: 30,
-      require: [true, "Set name for contact"],
+      maxlength: 40,
+      require: [true, "Set name for your pet"],
+    },
+    birthday: {
+      type: String,
+      minlength: 10,
+      maxlength: 10,
+      require: [true, "Set birthday date for your pet"],
+    },
+    breed: {
+      type: String,
+      minlength: 3,
+      maxlength: 20,
+      require: [true, "Set breed for your pet"],
+    },
+    place: {
+      type: String,
+      minlength: 2,
+      maxlength: 20,
+      require: [true, "Set your place"],
+    },
+    sex: {
+      type: String,
+      minlength: 4,
+      maxlength: 6,
+      require: [true, "Set sex for your pet"],
     },
     email: {
       type: String,
-      minlength: 6,
-      maxlength: 40,
-      require: [true, "Set email for contact"],
+      minlength: 10,
+      maxlength: 18,
+      require: [true, "Set birthday date for your pet"],
     },
     phone: {
       type: String,
-      minlength: 12,
-      maxlength: 16,
-      require: [true, "Set phone for contact"],
+      minlength: 10,
+      maxlength: 18,
+      require: [true, "Set birthday date for your pet"],
     },
-    favorite: {
+    description: {
       type: Boolean,
       default: false,
     },
@@ -41,7 +71,7 @@ const postSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-const Contact = mongoose.model("posts", postSchema);
+const Post = mongoose.model("posts", postSchema);
 
 const usersSchema = new Schema(
   {
@@ -61,11 +91,7 @@ const usersSchema = new Schema(
       required: [true, "Email is required"],
       unique: true,
     },
-    subscription: {
-      type: String,
-      enum: ["starter", "pro", "business"],
-      default: "starter",
-    },
+
     token: {
       type: String,
       default: null,
@@ -107,9 +133,6 @@ const joiUserSignUpSchema = Joi.object({
   subscription: Joi.string().valid("starter", "pro", "business"),
 });
 
-const joiUserSubscriptionSchema = Joi.object({
-  subscription: Joi.string().valid("starter", "pro", "business"),
-});
 const User = mongoose.model("users", usersSchema);
 
 const contactsSchema = Joi.object({
@@ -121,9 +144,8 @@ const contactsSchema = Joi.object({
 
 module.exports = {
   User,
-  Contact,
+  Post,
   joiUserLoginSchema,
   joiUserSignUpSchema,
-  joiUserSubscriptionSchema,
   contactsSchema,
 };
