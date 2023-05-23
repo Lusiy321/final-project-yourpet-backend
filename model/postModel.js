@@ -58,8 +58,8 @@ const postSchema = new Schema(
       default: null,
     },
     owner: {
-      type: User,
-      require: true,
+      type: String,
+      require: User,
     },
   },
   { versionKey: false, timestamps: true }

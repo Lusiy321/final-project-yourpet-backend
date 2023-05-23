@@ -2,6 +2,26 @@ const { Post } = require("../model/postModel");
 
 const get = async (req, res, next) => {
   try {
+    const { ...params } = req.query;
+
+    const result = await Post.find({ ...params }, "-createdAt -updatedAt");
+    res.json({
+      status: "success",
+      code: 200,
+      data: { post: result },
+    });
+  } catch (e) {
+    res.status(404).json({
+      status: "error",
+      code: 404,
+      message: `Not found contact id`,
+      data: "Not Found",
+    });
+    next(e);
+  }
+};
+const getMy = async (req, res, next) => {
+  try {
     const { _id: owner } = req.user;
     const { ...params } = req.query;
 
@@ -217,6 +237,7 @@ const remove = async (req, res, next) => {
 
 module.exports = {
   get,
+  getMy,
   getById,
   create,
   update,

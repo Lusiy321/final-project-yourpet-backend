@@ -1,6 +1,6 @@
 const { Unauthorized, Conflict, NotFound } = require("http-errors");
 const { User } = require("../model/userModel");
-const queryString = require("query-string");
+const queryString = require("node:querystring");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const URL = require("url");

@@ -6,22 +6,25 @@ const {
   remove,
   update,
   upStatus,
+  getMy,
 } = require("../../controller/contactController");
 const { userAuth, validation } = require("../../service/userAuth");
-const { postSchema } = require("../../model/userModel");
+const { postSchema } = require("../../model/postModel");
 
 const router = express.Router();
 
-router.get("/", userAuth, get);
+router.get("/", get);
 
-router.get("/:contactId", userAuth, getById);
+router.get("/my", userAuth, getMy);
 
-router.post("/", userAuth, validation(postSchema), create);
+router.get("/:postId", userAuth, getById);
 
-router.delete("/:contactId", userAuth, remove);
+router.post("/add", userAuth, validation(postSchema), create);
 
-router.put("/:contactId", userAuth, update);
+router.delete("/del/:postId", userAuth, remove);
 
-router.patch("/:contactId/favorite", userAuth, upStatus);
+router.put("/:postId", userAuth, update);
+
+router.patch("/:postId/favorite", userAuth, upStatus);
 
 module.exports = router;
