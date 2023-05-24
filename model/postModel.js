@@ -45,12 +45,13 @@ const postSchema = new Schema(
     description: {
       type: String,
       minlength: 10,
-      maxlength: 100,
+      maxlength: 180,
       require: [true, "Set description for your post"],
     },
-    announcement: {
+    category: {
       type: String,
-      require: [true, "Set options"],
+      enum: ["sell", "lost-found", "for-free"],
+      require: [true, "Set category"],
     },
     avatar: {
       type: String,

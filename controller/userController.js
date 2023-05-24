@@ -13,24 +13,6 @@ const BASE_URL = process.env.BASE_URL;
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const PORT = process.env.PORT;
 
-async function currentUser(req, res, next) {
-  try {
-    const { name, email } = req.user;
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        user: {
-          name,
-          email,
-        },
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
 async function loginUser(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -173,7 +155,6 @@ async function googleRedirect(req, res) {
 }
 
 module.exports = {
-  currentUser,
   loginUser,
   logoutUser,
   signupUser,

@@ -3,7 +3,6 @@ const { validation, userAuth } = require("../../service/userAuth");
 const {
   joiUserLoginSchema,
   joiUserSignUpSchema,
-  joiUserSubscriptionSchema,
 } = require("../../model/userModel");
 const usersController = require("../../controller/userController");
 
@@ -22,12 +21,9 @@ router.post(
 );
 router.post("/logout", userAuth, usersController.logoutUser);
 
-router.get("/current", userAuth, usersController.currentUser);
-
 router.patch(
   "/update",
   userAuth,
-  validation(joiUserSubscriptionSchema),
   usersController.updateSubscriptionUser
 );
 

@@ -8,7 +8,7 @@ const get = async (req, res, next) => {
     res.json({
       status: "success",
       code: 200,
-      data: { post: result },
+      data: { posts: result },
     });
   } catch (e) {
     res.status(404).json({
@@ -32,7 +32,7 @@ const getMy = async (req, res, next) => {
     res.json({
       status: "success",
       code: 200,
-      data: { post: result },
+      data: { posts: result },
     });
   } catch (e) {
     res.status(404).json({
@@ -45,41 +45,32 @@ const getMy = async (req, res, next) => {
   }
 };
 
-const getById = async (req, res, next) => {
-  const { contactId } = req.params;
-  const { _id: owner } = req.user;
-  try {
-    const result = await Post.findById({ _id: contactId, owner });
-    if (result) {
-      res.json({
-        status: "success",
-        code: 200,
-        data: { post: result },
-      });
-    } else {
-      res.status(404).json({
-        status: "error",
-        code: 404,
-        message: `Not found post id: ${contactId}`,
-        data: "Not Found",
-      });
-    }
-  } catch (e) {
-    res.status(404).json({
-      status: "error",
-      code: 404,
-      message: `Not found post id: ${contactId}`,
-      data: "Not Found",
-    });
-    next(e);
-  }
-};
-
 const create = async (req, res, next) => {
-  const { name, email, phone } = req.body;
+  const {
+    title,
+    name,
+    petBirthday,
+    breed,
+    price,
+    sex,
+    description,
+    category,
+    avatar,
+  } = req.body;
   const { _id: owner } = req.user;
   try {
-    const result = await Post.create({ name, email, phone, owner });
+    const result = await Post.create({
+      title,
+      name,
+      petBirthday,
+      breed,
+      price,
+      sex,
+      description,
+      category,
+      avatar,
+      owner,
+    });
     if (!result) {
       return res.status(404).json({
         status: "error",
@@ -105,111 +96,43 @@ const create = async (req, res, next) => {
 };
 
 const update = async (req, res, next) => {
-  const { contactId } = req.params;
+  const { postId } = req.params;
   const { _id: owner } = req.user;
-  const { name, email, phone } = req.body;
+  const {
+    title,
+    name,
+    petBirthday,
+    breed,
+    price,
+    sex,
+    description,
+    category,
+    avatar,
+  } = req.body;
 
   try {
     const result = await Post.findByIdAndUpdate(
-      { _id: contactId, owner },
-      { name, email, phone }
+      { _id: postId, owner },
+      {
+        title,
+        name,
+        petBirthday,
+        breed,
+        price,
+        sex,
+        description,
+        category,
+        avatar,
+      }
     );
     if (!result) {
       res.status(400).json({
         status: "error",
         code: 400,
-        message: `missing field favorite`,
+        message: `missing field`,
         data: "Not Found",
       });
     }
-    if (result) {
-      res.json({
-        status: "success",
-        code: 200,
-        data: { contact: result },
-      });
-    } else {
-      res.status(404).json({
-        status: "error",
-        code: 404,
-        message: `Not found contact id: ${contactId}`,
-        data: "Not Found",
-      });
-    }
-  } catch (e) {
-    res.status(400).json({
-      status: "error",
-      code: 400,
-      message: `missing field favorite`,
-      data: "Not Found",
-    });
-    next(e);
-  }
-};
-
-const upStatus = async (req, res, next) => {
-  const { contactId } = req.params;
-  const { _id: owner } = req.user;
-  const { favorite } = req.body;
-  try {
-    if (!contactId) {
-      res.status(400).json({
-        status: "error",
-        code: 400,
-        message: `missing field favorite`,
-        data: "Not Found",
-      });
-    }
-    const result = await Post.findByIdAndUpdate(
-      { _id: contactId, owner },
-      { favorite }
-    );
-    if (!result) {
-      res.status(400).json({
-        status: "error",
-        code: 400,
-        message: `missing field favorite`,
-        data: "Not Found",
-      });
-    }
-    if (result) {
-      res.json({
-        status: "success",
-        code: 200,
-        data: { contact: result },
-      });
-    } else {
-      res.status(404).json({
-        status: "error",
-        code: 404,
-        message: `Not found contact id: ${contactId}`,
-        data: "Not Found",
-      });
-    }
-  } catch (e) {
-    res.status(400).json({
-      status: "error",
-      code: 400,
-      message: `missing field favorite`,
-      data: "Not Found",
-    });
-    next(e);
-  }
-};
-
-const remove = async (req, res, next) => {
-  const { contactId } = req.params;
-  const { _id: owner } = req.user;
-  try {
-    if (!contactId) {
-      res.status(400).json({
-        status: "error",
-        code: 400,
-        message: `missing field favorite`,
-        data: "Not Found",
-      });
-    }
-    const result = await Post.findByIdAndRemove({ _id: contactId, owner });
     if (result) {
       res.json({
         status: "success",
@@ -220,7 +143,7 @@ const remove = async (req, res, next) => {
       res.status(404).json({
         status: "error",
         code: 404,
-        message: `Not found post id: ${contactId}`,
+        message: `Not found post id: ${postId}`,
         data: "Not Found",
       });
     }
@@ -228,7 +151,45 @@ const remove = async (req, res, next) => {
     res.status(400).json({
       status: "error",
       code: 400,
-      message: `missing field favorite`,
+      message: `missing field`,
+      data: "Not Found",
+    });
+    next(e);
+  }
+};
+
+const remove = async (req, res, next) => {
+  const { postId } = req.params;
+  const { _id: owner } = req.user;
+  try {
+    if (!postId) {
+      res.status(400).json({
+        status: "error",
+        code: 400,
+        message: `missing field`,
+        data: "Not Found",
+      });
+    }
+    const result = await Post.findByIdAndRemove({ _id: postId, owner });
+    if (result) {
+      res.json({
+        status: "success",
+        code: 200,
+        data: { post: result },
+      });
+    } else {
+      res.status(404).json({
+        status: "error",
+        code: 404,
+        message: `Not found post id: ${postId}`,
+        data: "Not Found",
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      status: "error",
+      code: 400,
+      message: `missing field`,
       data: "Not Found",
     });
     next(e);
@@ -238,9 +199,7 @@ const remove = async (req, res, next) => {
 module.exports = {
   get,
   getMy,
-  getById,
   create,
   update,
   remove,
-  upStatus,
 };
