@@ -18,7 +18,7 @@ router.post(
 );
 router.post("/logout", userAuth, usersController.logoutUser);
 
-router.put("/:userId", userAuth, usersController.updateUser);
+router.put("/update", userAuth, usersController.updateUser);
 
 router.get("/google", usersController.googleAuth);
 

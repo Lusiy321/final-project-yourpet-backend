@@ -49,7 +49,7 @@ const usersSchema = new Schema(
     },
     avatarURL: {
       type: String,
-      default: null,
+      default: "",
     },
     token: {
       type: String,
