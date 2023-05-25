@@ -50,9 +50,9 @@ const postSchema = new Schema(
     },
     category: {
       type: String,
-      enum: ["sell", "lost-found", "for-free", "your-pet"],
+      enum: ["sell", "lost-found", "for-free"],
       require: [true, "Set category"],
-      default: "your-pet",
+      default: "sell",
     },
     location: {
       type: String,
