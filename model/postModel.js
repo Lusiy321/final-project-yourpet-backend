@@ -50,13 +50,24 @@ const postSchema = new Schema(
     },
     category: {
       type: String,
-      enum: ["sell", "lost-found", "for-free"],
+      enum: ["sell", "lost-found", "for-free", "your-pet"],
       require: [true, "Set category"],
+      default: "your-pet",
+    },
+    location: {
+      type: String,
+      minlength: 3,
+      maxlength: 80,
+      require: [true, "Set location for your pet"],
     },
     avatar: {
       type: String,
       require: [true, "Set avatar link"],
       default: null,
+    },
+    favorite: {
+      type: Array,
+      default: [],
     },
     owner: {
       type: String,

@@ -22,6 +22,7 @@ app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/posts", postRouter);
 app.use("/users", usrRouter);
+
 app.get("/", async (req, res) => {
   console.log(req.body);
   res.status(200).json("Server started");

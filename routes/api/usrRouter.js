@@ -1,16 +1,13 @@
 const express = require("express");
 const { validation, userAuth } = require("../../service/userAuth");
-const {
-  joiUserLoginSchema,
-  joiUserSignUpSchema,
-} = require("../../model/userModel");
+const { joiUserLoginSchema } = require("../../model/userModel");
 const usersController = require("../../controller/userController");
 
 const router = express.Router();
 
 router.post(
   "/register",
-  validation(joiUserSignUpSchema),
+  validation(joiUserLoginSchema),
   usersController.signupUser
 );
 
@@ -21,11 +18,7 @@ router.post(
 );
 router.post("/logout", userAuth, usersController.logoutUser);
 
-router.patch(
-  "/update",
-  userAuth,
-  usersController.updateSubscriptionUser
-);
+router.put("/:userId", userAuth, usersController.updateUser);
 
 router.get("/google", usersController.googleAuth);
 

@@ -53,6 +53,7 @@ const create = async (req, res, next) => {
     breed,
     price,
     sex,
+    location,
     description,
     category,
     avatar,
@@ -66,6 +67,7 @@ const create = async (req, res, next) => {
       breed,
       price,
       sex,
+      location,
       description,
       category,
       avatar,
@@ -98,31 +100,13 @@ const create = async (req, res, next) => {
 const update = async (req, res, next) => {
   const { postId } = req.params;
   const { _id: owner } = req.user;
-  const {
-    title,
-    name,
-    petBirthday,
-    breed,
-    price,
-    sex,
-    description,
-    category,
-    avatar,
-  } = req.body;
+  const { ...params } = req.body;
 
   try {
     const result = await Post.findByIdAndUpdate(
       { _id: postId, owner },
       {
-        title,
-        name,
-        petBirthday,
-        breed,
-        price,
-        sex,
-        description,
-        category,
-        avatar,
+        ...params,
       }
     );
     if (!result) {
@@ -196,10 +180,88 @@ const remove = async (req, res, next) => {
   }
 };
 
+const upStatus = async (req, res, next) => {
+  const { postId } = req.params;
+  const { _id } = req.user;
+  const { favorite } = req.body;
+  try {
+    if (!postId) {
+      res.status(400).json({
+        status: "error",
+        code: 400,
+        message: `missing field favorite`,
+        data: "Not Found",
+      });
+    }
+    const result = await Post.findByIdAndUpdate(
+      { _id: postId },
+      { favorite },
+      { new: favorite.push(_id) }
+    );
+    if (!result) {
+      res.status(400).json({
+        status: "error",
+        code: 400,
+        message: `missing field favorite`,
+        data: "Not Found",
+      });
+    }
+    if (result) {
+      res.json({
+        status: "success",
+        code: 200,
+        data: { contact: result },
+      });
+    } else {
+      res.status(404).json({
+        status: "error",
+        code: 404,
+        message: `Not found contact id: ${postId}`,
+        data: "Not Found",
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      status: "error",
+      code: 400,
+      message: `missing field favorite`,
+      data: "Not Found",
+    });
+    next(e);
+  }
+};
+
+const getFav = async (req, res, next) => {
+  try {
+    const { _id: favorite } = req.user;
+    const { ...params } = req.query;
+
+    const result = await Post.find(
+      { favorite, ...params },
+      "-createdAt -updatedAt"
+    );
+    res.json({
+      status: "success",
+      code: 200,
+      data: { posts: result },
+    });
+  } catch (e) {
+    res.status(404).json({
+      status: "error",
+      code: 404,
+      message: `Not found contact id`,
+      data: "Not Found",
+    });
+    next(e);
+  }
+};
+
 module.exports = {
   get,
   getMy,
   create,
   update,
   remove,
+  upStatus,
+  getFav,
 };

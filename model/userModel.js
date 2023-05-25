@@ -4,16 +4,15 @@ const Schema = mongoose.Schema;
 const Joi = require("joi");
 const emailRegexp =
   /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/;
-const nameRegexp = /^[a-zA-Z. ']+$/;
 const bcrypt = require("bcryptjs");
 
 const usersSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, "Set  name"],
-      unique: true,
-      match: nameRegexp,
+      minlength: 3,
+      maxlength: 30,
+      default: "User",
     },
 
     email: {
@@ -32,39 +31,29 @@ const usersSchema = new Schema(
       type: String,
       minlength: 10,
       maxlength: 10,
-      require: [true, "Set birthday date for your pet"],
+      default: "00.00.0000",
     },
 
     phone: {
       type: String,
       minlength: 12,
-      maxlength: 16,
-      require: [true, "Set phone for contact"],
+      maxlength: 12,
+      default: "+38000000000",
     },
 
     location: {
       type: String,
       minlength: 2,
-      maxlength: 20,
-      require: [true, "Set your place"],
+      maxlength: 30,
+      default: "Kyiv",
     },
     avatarURL: {
       type: String,
-      required: true,
       default: null,
     },
     token: {
       type: String,
       default: null,
-    },
-    verify: {
-      type: Boolean,
-      default: false,
-    },
-    verificationToken: {
-      type: String,
-      default: null,
-      required: [true, "Verify token is required"],
     },
   },
   { versionKey: false, timestamps: true }
@@ -83,17 +72,9 @@ const joiUserLoginSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
 });
 
-const joiUserSignUpSchema = Joi.object({
-  name: Joi.string().pattern(nameRegexp).min(3).max(30).required(),
-  password: Joi.string().min(6).required(),
-  email: Joi.string().pattern(emailRegexp).required(),
-  subscription: Joi.string().valid("starter", "pro", "business"),
-});
-
 const User = mongoose.model("users", usersSchema);
 
 module.exports = {
   User,
   joiUserLoginSchema,
-  joiUserSignUpSchema,
 };

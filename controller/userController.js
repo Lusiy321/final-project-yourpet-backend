@@ -1,4 +1,4 @@
-const { Unauthorized, Conflict, NotFound } = require("http-errors");
+const { Unauthorized, Conflict } = require("http-errors");
 const { User } = require("../model/userModel");
 const queryString = require("node:querystring");
 const jwt = require("jsonwebtoken");
@@ -45,11 +45,11 @@ async function logoutUser(req, res, next) {
   try {
     const { _id } = req.user;
     await User.findByIdAndUpdate(_id, { token: null });
-    res.status(204).json({
+    return res.json({
       status: "success",
       code: 204,
       data: {
-        _id,
+        token: null,
       },
     });
   } catch (error) {
@@ -59,13 +59,13 @@ async function logoutUser(req, res, next) {
 
 async function signupUser(req, res, next) {
   try {
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
     const registrationUser = await User.findOne({ email });
     if (registrationUser) {
       throw new Conflict(`User with ${email} in use`);
     }
 
-    const newUser = new User({ name, email });
+    const newUser = new User({ email });
     newUser.setPassword(password);
     newUser.save();
     res.status(201).json({
@@ -80,35 +80,45 @@ async function signupUser(req, res, next) {
   }
 }
 
-async function updateSubscriptionUser(req, res, next) {
+const updateUser = async (req, res, next) => {
+  const { userId } = req.params;
+  const { ...params } = req.body;
+
   try {
-    const { _id, name, email, createdAt, updatedAt } = req.user;
-    const { subscription } = req.body;
-    const result = await User.findByIdAndUpdate(
-      _id,
-      { subscription },
-      { new: true }
-    );
+    const result = await User.findByIdAndUpdate({ ...params });
     if (!result) {
-      throw new NotFound(`subscription with id=${_id} not found!`);
+      res.status(400).json({
+        status: "error",
+        code: 400,
+        message: `missing field favorite`,
+        data: "Not Found",
+      });
     }
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        user: {
-          name,
-          email,
-          subscription,
-          createdAt,
-          updatedAt,
-        },
-      },
+    if (result) {
+      res.json({
+        status: "success",
+        code: 200,
+        data: { user: result },
+      });
+    } else {
+      res.status(404).json({
+        status: "error",
+        code: 404,
+        message: `Not found user id: ${userId}`,
+        data: "Not Found",
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      status: "error",
+      code: 400,
+      message: `missing field favorite`,
+      data: "Not Found",
     });
-  } catch (error) {
-    next(error);
+    next(e);
   }
-}
+};
+
 async function googleAuth(_req, res) {
   const fieldParams = queryString.stringyfy({
     client_id: GOOGLE_CLIENT_ID,
@@ -158,7 +168,7 @@ module.exports = {
   loginUser,
   logoutUser,
   signupUser,
-  updateSubscriptionUser,
+  updateUser,
   googleAuth,
   googleRedirect,
 };
