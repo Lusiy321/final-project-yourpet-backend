@@ -15,7 +15,7 @@ router.get("/", get); // Запросить все посты
 
 router.put("/:postId", userAuth, update); // Обновить пост
 
-router.get("/:userId", userAuth, getMy); // Запросить посты по ID пользователя (owner)
+router.get("/my", userAuth, getMy); // Запросить посты по ID пользователя (owner)
 
 router.post("/add", userAuth, create); // Создать пост
 

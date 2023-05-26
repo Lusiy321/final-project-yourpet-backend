@@ -26,20 +26,22 @@ const get = async (req, res, next) => {
 };
 const getMy = async (req, res, next) => {
   try {
-    const { _id: owner } = req.user;
-    const { ...params } = req.query;
+    const { authorization = "" } = req.headers;
+    const [bearer, token] = authorization.split(" ");
 
-    const result = await Post.find(
-      { owner, ...params },
-      "-createdAt -updatedAt"
-    );
+    if (bearer !== "Bearer") {
+      throw new Unauthorized("Not authorized");
+    }
+    const { id } = jwt.verify(token, KEY);
+
+    const result = await Post.find({ owner: id }, "-createdAt -updatedAt");
     res.json({
       status: "success",
       code: 200,
       data: { posts: result },
     });
   } catch (e) {
-    res.status(404).json({
+    res.json({
       status: "error",
       code: 404,
       message: `Not found contact id`,
@@ -69,6 +71,7 @@ const create = async (req, res, next) => {
     category,
     avatar,
   } = req.body;
+
   try {
     const result = await Post.create({
       title,
@@ -120,7 +123,7 @@ const update = async (req, res, next) => {
       }
     );
     if (!result) {
-      res.status(400).json({
+      res.json({
         status: "error",
         code: 400,
         message: `missing field`,
@@ -134,7 +137,7 @@ const update = async (req, res, next) => {
         data: { post: result },
       });
     } else {
-      res.status(404).json({
+      res.json({
         status: "error",
         code: 404,
         message: `Not found post id: ${postId}`,
@@ -142,7 +145,7 @@ const update = async (req, res, next) => {
       });
     }
   } catch (e) {
-    res.status(400).json({
+    res.json({
       status: "error",
       code: 400,
       message: `missing field`,
@@ -157,7 +160,7 @@ const remove = async (req, res, next) => {
   const { _id: owner } = req.user;
   try {
     if (!postId) {
-      res.status(400).json({
+      res.json({
         status: "error",
         code: 400,
         message: `missing field`,
@@ -172,7 +175,7 @@ const remove = async (req, res, next) => {
         data: { post: result },
       });
     } else {
-      res.status(404).json({
+      res.json({
         status: "error",
         code: 404,
         message: `Not found post id: ${postId}`,
@@ -180,7 +183,7 @@ const remove = async (req, res, next) => {
       });
     }
   } catch (e) {
-    res.status(400).json({
+    res.json({
       status: "error",
       code: 400,
       message: `missing field`,
@@ -196,7 +199,7 @@ const upStatus = async (req, res, next) => {
   const { favorite } = req.body;
   try {
     if (!postId) {
-      res.status(400).json({
+      res.json({
         status: "error",
         code: 400,
         message: `missing field favorite`,
@@ -209,7 +212,7 @@ const upStatus = async (req, res, next) => {
       { new: favorite.push(_id) }
     );
     if (!result) {
-      res.status(400).json({
+      res.json({
         status: "error",
         code: 400,
         message: `missing field favorite`,
@@ -223,7 +226,7 @@ const upStatus = async (req, res, next) => {
         data: { contact: result },
       });
     } else {
-      res.status(404).json({
+      res.json({
         status: "error",
         code: 404,
         message: `Not found contact id: ${postId}`,
@@ -231,7 +234,7 @@ const upStatus = async (req, res, next) => {
       });
     }
   } catch (e) {
-    res.status(400).json({
+    res.json({
       status: "error",
       code: 400,
       message: `missing field favorite`,
@@ -256,7 +259,7 @@ const getFav = async (req, res, next) => {
       data: { posts: result },
     });
   } catch (e) {
-    res.status(404).json({
+    res.json({
       status: "error",
       code: 404,
       message: `Not found contact id`,
