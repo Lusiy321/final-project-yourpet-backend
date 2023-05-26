@@ -12,6 +12,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const BASE_URL = process.env.BASE_URL;
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const PORT = process.env.PORT;
+const KEY = process.env.SECRET_KEY;
 
 async function loginUser(req, res, next) {
   try {
@@ -81,11 +82,17 @@ async function signupUser(req, res, next) {
 }
 
 const updateUser = async (req, res, next) => {
-  const { userId } = req.params;
+  const { authorization = "" } = req.headers;
+  const [bearer, token] = authorization.split(" ");
+
+  if (bearer !== "Bearer") {
+    throw new Unauthorized("Not authorized");
+  }
+  const { id } = jwt.verify(token, KEY);
   const { ...params } = req.body;
 
   try {
-    const result = await User.findByIdAndUpdate({ ...params });
+    const result = await User.findByIdAndUpdate({ _id: id }, { ...params });
     if (!result) {
       res.status(400).json({
         status: "error",
@@ -104,7 +111,7 @@ const updateUser = async (req, res, next) => {
       res.status(404).json({
         status: "error",
         code: 404,
-        message: `Not found user id: ${userId}`,
+        message: `Not found user id: ${id}`,
         data: "Not Found",
       });
     }

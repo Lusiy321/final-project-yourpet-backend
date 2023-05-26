@@ -137,8 +137,8 @@
         }
       }
     },
-    "/user/update": {
-      "patch": {
+    "/users/update": {
+      "put": {
         "tags": ["Auth"],
         "summary": "Update user data",
         "security": [
@@ -153,7 +153,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RefreshTokensRequest"
+                "$ref": "#/components/schemas/updateRequest"
               }
             }
           }
@@ -164,7 +164,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RefreshTokensResponse"
+                  "$ref": "#/components/schemas/updateResponse"
                 }
               }
             }
@@ -184,7 +184,7 @@
         }
       }
     },
-    "/auth/google": {
+    "/users/google": {
       "get": {
         "tags": ["Auth"],
         "summary": "Google authentication. WARNING: Works only for sign-in, after registered on front-end (if you're writing your back-end for a SPECIFIC front-end, then you can configure it right to work both for sign-up & sign-in)",
@@ -200,7 +200,7 @@
         }
       }
     },
-    "/auth/google-redirect": {
+    "/users/google-redirect": {
       "get": {
         "tags": ["Auth"],
         "summary": "Google authentication. WARNING: Works only for sign-in, after registered on front-end (if you're writing your back-end for a SPECIFIC front-end, then you can configure it right to work both for sign-up & sign-in)",
@@ -677,34 +677,106 @@
           }
         }
       },
-      "RefreshTokensRequest": {
+      "updateRequest": {
         "type": "object",
         "properties": {
-          "sid": {
+    "name": {
             "type": "string",
-            "description": "Session's ('sid' field after authentication)",
-            "example": "507f1f77bcf86cd799439010"
-          }
+            "description": "User's name",
+            "example": "Ann",
+            "minLength": 2,
+            "maxLength": 80
+          },
+    "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "mail_on123@gmail.com",
+            "format": "email",
+            "minLength": 2,
+            "maxLength": 254
+    },
+    "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123",
+            "minLength": 6     
+    },
+    "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "00.00.0000",
+            "minLength": 10
+          },
+    "phone": {
+            "type": "string",
+            "description": "User's phone",
+            "example": "+38000000000",
+            "minLength": 12,
+            "maxLength": 12
+    },
+    "location": {
+            "type": "string",
+            "description": "User's location",
+            "example": "Kyiv",
+            "minLength": 2,
+            "maxLength": 30
+    },
+    "avatarURL": {
+          "type": "string",
+          "description": "User's avatar",
+          "example": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fuk.wikipedia.org%2Fwiki%2F%25D0%259F%25D0%25B5%25D1%2580%25D0%25B5%25D0%25BA%25D0%25BB%25D0%25B0%25D0%25B4%25D0%25B0%25D1%2587_Google&psig=AOvVaw1dmOpWRFabw3eC4YyON3GA&ust=1685107611309000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCJirt5bJkP8CFQAAAAAdAAAAABAJ"
+    }
         }
       },
-      "RefreshTokensResponse": {
+      "updateResponse": {
         "type": "object",
         "properties": {
-          "newAccessToken": {
+          "name": {
             "type": "string",
-            "description": "Access token",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmMyMDg1YmQwOTM2NTI4MTA3Y2UyNzQiLCJzaWQiOiI1ZmMyZDJmY2UxZDIwNTA2NzAyYmRkMjIiLCJpYXQiOjE2MDY2MDM1MTYsImV4cCI6MTYwNjYwNzExNn0.rJ_QjU4KvA76H96RHsvOBChK0Vjbd0NmqjMxdQVJIXA"
+            "description": "User's name",
+            "example": "Ann",
+            "minLength": 2,
+            "maxLength": 80
           },
-          "newRefreshToken": {
+    "email": {
             "type": "string",
-            "description": "Refresh token",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmMyMDg1YmQwOTM2NTI4MTA3Y2UyNzQiLCJzaWQiOiI1ZmMyZDJmY2UxZDIwNTA2NzAyYmRkMjIiLCJpYXQiOjE2MDY2MDM1MTYsImV4cCI6MTYwNjYwNzExNn0.rJ_QjU4KvA76H96RHsvOBChK0Vjbd0NmqjMxdQVJIXB"
+            "description": "User's email",
+            "example": "mail_on123@gmail.com",
+            "format": "email",
+            "minLength": 2,
+            "maxLength": 254
+    },
+    "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123",
+            "minLength": 6     
+    },
+    "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "00.00.0000",
+            "minLength": 10
           },
-          "newSid": {
+    "phone": {
             "type": "string",
-            "description": "New session's id",
-            "example": "507f1f77bcf86cd799439009"
-          }
+            "description": "User's phone",
+            "example": "+38000000000",
+            "minLength": 12,
+            "maxLength": 12
+    },
+    "location": {
+            "type": "string",
+            "description": "User's location",
+            "example": "Kyiv",
+            "minLength": 2,
+            "maxLength": 30
+    },
+    "avatarURL": {
+          "type": "string",
+          "description": "User's avatar",
+          "example": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fuk.wikipedia.org%2Fwiki%2F%25D0%259F%25D0%25B5%25D1%2580%25D0%25B5%25D0%25BA%25D0%25BB%25D0%25B0%25D0%25B4%25D0%25B0%25D1%2587_Google&psig=AOvVaw1dmOpWRFabw3eC4YyON3GA&ust=1685107611309000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCJirt5bJkP8CFQAAAAAdAAAAABAJ"
+    }
         }
       },
       "AddBookRequest": {
