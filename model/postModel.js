@@ -1,13 +1,10 @@
 const mongoose = require("mongoose");
-const { User } = require("./userModel");
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema(
   {
     title: {
       type: String,
-      minlength: 10,
-      maxlength: 60,
       require: [true, "Set title for your post"],
     },
     name: {
@@ -30,10 +27,10 @@ const postSchema = new Schema(
     },
 
     price: {
-      type: Number,
+      type: String,
       minlength: 1,
       maxlength: 18,
-      default: null,
+      default: "0",
     },
     sex: {
       type: String,
@@ -45,25 +42,23 @@ const postSchema = new Schema(
     description: {
       type: String,
       minlength: 10,
-      maxlength: 180,
+      maxlength: 280,
       require: [true, "Set description for your post"],
     },
     category: {
       type: String,
       enum: ["sell", "lost-found", "for-free"],
-      require: [true, "Set category"],
       default: "sell",
     },
     location: {
       type: String,
       minlength: 3,
       maxlength: 80,
-      require: [true, "Set location for your pet"],
+      default: "Kyiv",
     },
     avatar: {
       type: String,
-      require: [true, "Set avatar link"],
-      default: null,
+      default: "",
     },
     favorite: {
       type: Array,
@@ -71,7 +66,6 @@ const postSchema = new Schema(
     },
     owner: {
       type: String,
-      require: User,
     },
   },
   { versionKey: false, timestamps: true }

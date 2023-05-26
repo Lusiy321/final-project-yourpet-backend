@@ -1,4 +1,8 @@
 const { Post } = require("../model/postModel");
+const { Unauthorized } = require("http-errors");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const KEY = process.env.SECRET_KEY;
 
 const get = async (req, res, next) => {
   try {
@@ -46,6 +50,13 @@ const getMy = async (req, res, next) => {
 };
 
 const create = async (req, res, next) => {
+  const { authorization = "" } = req.headers;
+  const [bearer, token] = authorization.split(" ");
+
+  if (bearer !== "Bearer") {
+    throw new Unauthorized("Not authorized");
+  }
+  const { id } = jwt.verify(token, KEY);
   const {
     title,
     name,
@@ -58,7 +69,6 @@ const create = async (req, res, next) => {
     category,
     avatar,
   } = req.body;
-  const { _id: owner } = req.user;
   try {
     const result = await Post.create({
       title,
@@ -71,23 +81,23 @@ const create = async (req, res, next) => {
       description,
       category,
       avatar,
-      owner,
+      owner: id,
     });
     if (!result) {
-      return res.status(404).json({
+      return res.json({
         status: "error",
         code: 404,
         message: `Not found data`,
         data: "Not Found",
       });
     }
-    res.status(201).json({
+    res.json({
       status: "success",
       code: 201,
-      data: { contact: result },
+      data: { post: result },
     });
   } catch (e) {
-    res.status(404).json({
+    res.json({
       status: "error",
       code: 404,
       message: `Not found`,
