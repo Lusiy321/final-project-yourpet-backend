@@ -20,8 +20,8 @@ router.post("/logout", userAuth, usersController.logoutUser);
 
 router.put("/update", userAuth, usersController.updateUser);
 
-router.get("/google", usersController.googleAuth);
+// router.get("/google", usersController.googleAuth);
 
-router.get("/google-redirect", usersController.googleRedirect);
+// router.get("/google-redirect", usersController.googleRedirect);
 
 module.exports = router;
