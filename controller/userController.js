@@ -12,6 +12,27 @@ const SECRET_KEY = process.env.SECRET_KEY;
 // const PORT = process.env.PORT;
 const KEY = process.env.SECRET_KEY;
 
+const getUser = async (req, res, next) => {
+  try {
+    const { ...params } = req.query;
+
+    const result = await User.find({ ...params }, "-createdAt -updatedAt");
+    res.json({
+      status: "success",
+      code: 200,
+      data: { posts: result },
+    });
+  } catch (e) {
+    res.status(404).json({
+      status: "error",
+      code: 404,
+      message: `Not found contact id`,
+      data: "Not Found",
+    });
+    next(e);
+  }
+};
+
 async function loginUser(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -174,4 +195,5 @@ module.exports = {
   logoutUser,
   signupUser,
   updateUser,
+  getUser,
 };

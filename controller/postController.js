@@ -1,6 +1,7 @@
 const { Post } = require("../model/postModel");
 const { Unauthorized } = require("http-errors");
 const jwt = require("jsonwebtoken");
+const { User } = require("../model/userModel");
 require("dotenv").config();
 const KEY = process.env.SECRET_KEY;
 
@@ -71,8 +72,9 @@ const create = async (req, res, next) => {
     category,
     avatar,
   } = req.body;
-
+  const { _id } = req.user;
   try {
+    const { email, phone } = await User.findOne({ _id });
     const result = await Post.create({
       title,
       name,
@@ -84,7 +86,7 @@ const create = async (req, res, next) => {
       description,
       category,
       avatar,
-      owner: id,
+      owner: { id, email, phone },
     });
     if (!result) {
       return res.json({
