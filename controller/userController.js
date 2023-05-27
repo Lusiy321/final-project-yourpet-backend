@@ -4,12 +4,7 @@ const { User } = require("../model/userModel");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-// const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-// const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const SECRET_KEY = process.env.SECRET_KEY;
-// const BASE_URL = process.env.BASE_URL;
-// const FRONTEND_URL = process.env.FRONTEND_URL;
-// const PORT = process.env.PORT;
 const KEY = process.env.SECRET_KEY;
 
 const getUser = async (req, res, next) => {
