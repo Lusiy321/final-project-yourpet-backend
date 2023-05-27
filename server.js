@@ -22,6 +22,7 @@ app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/posts", postRouter);
 app.use("/users", usrRouter);
+app.use("/friends", express.static("public"));
 
 app.get("/", async (req, res) => {
   console.log(req.body);
