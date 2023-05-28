@@ -218,32 +218,27 @@ const upStatus = async (req, res, next) => {
   const { id } = jwt.verify(token, KEY);
 
   try {
-    const result = await Post.findOne({
-      _id: postId,
-    });
-    // if (!result.favorite === [id]) {
-    //   await Post.findByIdAndUpdate(
-    //     { _id: postId },
-    //     { $push: { favorite: [id] } }
-    //   );
-    // }
-    // if (result.favorite === [id]) {
-    //   await Post.findByIdAndUpdate(
-    //     { _id: postId },
-    //     { $pull: { favorite: [id] } }
-    //   );
-    // } else {
-    //   res.json({
-    //     status: "error",
-    //     code: 404,
-    //     message: `Not found post id: ${postId}`,
-    //     data: "Not Found",
-    //   });
-    // }
+    const document = await Post.findOne({ _id: postId });
+    if (document.favorite === id) {
+      await Post.updateOne(
+        {
+          _id: postId,
+        },
+        { $pull: { favorite: id } }
+      );
+    }
+    if (!document.favorite === id) {
+      await Post.updateOne(
+        {
+          _id: postId,
+        },
+        { $push: { favorite: id } }
+      );
+    }
     return res.json({
       status: "success",
       code: 200,
-      data: { post: result },
+      data: { post: document },
     });
   } catch (e) {
     res.json({
