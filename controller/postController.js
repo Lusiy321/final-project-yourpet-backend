@@ -113,13 +113,19 @@ const create = async (req, res, next) => {
 };
 
 const update = async (req, res, next) => {
+  const { authorization = "" } = req.headers;
+  const [bearer, token] = authorization.split(" ");
+
+  if (bearer !== "Bearer") {
+    throw new Unauthorized("Not authorized");
+  }
   const { postId } = req.params;
-  const { _id: owner } = req.user;
+  const { id } = jwt.verify(token, KEY);
   const { ...params } = req.body;
 
   try {
     const result = await Post.findByIdAndUpdate(
-      { _id: postId, owner },
+      { _id: postId, owner: id },
       {
         ...params,
       }
@@ -158,8 +164,14 @@ const update = async (req, res, next) => {
 };
 
 const remove = async (req, res, next) => {
+  const { authorization = "" } = req.headers;
+  const [bearer, token] = authorization.split(" ");
+
+  if (bearer !== "Bearer") {
+    throw new Unauthorized("Not authorized");
+  }
   const { postId } = req.params;
-  const { _id: owner } = req.user;
+  const { id } = jwt.verify(token, KEY);
   try {
     if (!postId) {
       res.json({
@@ -169,7 +181,7 @@ const remove = async (req, res, next) => {
         data: "Not Found",
       });
     }
-    const result = await Post.findByIdAndRemove({ _id: postId, owner });
+    const result = await Post.findByIdAndRemove({ _id: postId, owner: id });
     if (result) {
       res.json({
         status: "success",
@@ -196,50 +208,48 @@ const remove = async (req, res, next) => {
 };
 
 const upStatus = async (req, res, next) => {
+  const { authorization = "" } = req.headers;
+  const [bearer, token] = authorization.split(" ");
+
+  if (bearer !== "Bearer") {
+    throw new Unauthorized("Not authorized");
+  }
   const { postId } = req.params;
-  const { _id } = req.user;
-  const { favorite } = req.body;
+  const { id } = jwt.verify(token, KEY);
+
   try {
-    if (!postId) {
-      res.json({
-        status: "error",
-        code: 400,
-        message: `missing field favorite`,
-        data: "Not Found",
-      });
-    }
-    const result = await Post.findByIdAndUpdate(
-      { _id: postId },
-      { favorite },
-      { new: favorite.push(_id) }
-    );
-    if (!result) {
-      res.json({
-        status: "error",
-        code: 400,
-        message: `missing field favorite`,
-        data: "Not Found",
-      });
-    }
-    if (result) {
-      res.json({
-        status: "success",
-        code: 200,
-        data: { contact: result },
-      });
-    } else {
-      res.json({
-        status: "error",
-        code: 404,
-        message: `Not found contact id: ${postId}`,
-        data: "Not Found",
-      });
-    }
+    const result = await Post.findOne({
+      _id: postId,
+    });
+    // if (!result.favorite === [id]) {
+    //   await Post.findByIdAndUpdate(
+    //     { _id: postId },
+    //     { $push: { favorite: [id] } }
+    //   );
+    // }
+    // if (result.favorite === [id]) {
+    //   await Post.findByIdAndUpdate(
+    //     { _id: postId },
+    //     { $pull: { favorite: [id] } }
+    //   );
+    // } else {
+    //   res.json({
+    //     status: "error",
+    //     code: 404,
+    //     message: `Not found post id: ${postId}`,
+    //     data: "Not Found",
+    //   });
+    // }
+    return res.json({
+      status: "success",
+      code: 200,
+      data: { post: result },
+    });
   } catch (e) {
     res.json({
       status: "error",
       code: 400,
-      message: `missing field favorite`,
+      message: `missing field`,
       data: "Not Found",
     });
     next(e);

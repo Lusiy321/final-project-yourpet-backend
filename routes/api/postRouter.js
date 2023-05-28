@@ -21,7 +21,7 @@ router.post("/add", userAuth, create); // Создать пост
 
 router.delete("/del/:postId", userAuth, remove); // Удалить пост
 
-router.patch("/favorite/:postId", userAuth, upStatus); // Добавить или удалить из избранного
+router.put("/favorite/:postId", userAuth, upStatus); // Добавить или удалить из избранного
 
 router.get("/favget/:userId", userAuth, getMy); // Запросить избранные посты по ID пользователя (favorit)
 

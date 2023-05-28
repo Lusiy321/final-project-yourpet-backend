@@ -22,6 +22,4 @@ router.put("/update", userAuth, usersController.updateUser);
 
 router.get("/", usersController.getUser);
 
-// router.get("/google-redirect", usersController.googleRedirect);
-
 module.exports = router;
