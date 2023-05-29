@@ -14,6 +14,7 @@
       "url": "https://final-project-yourpe-backend.onrender.com"
     }
   ],
+
   "tags": [
     {
       "name": "Auth",
@@ -21,7 +22,11 @@
     },
     {
       "name": "Posts",
-      "description": "Book endpoints"
+      "description": "Posts endpoints"
+    },
+    {
+      "name": "Pets",
+      "description": "My Pets endpoints"
     }
   ],
   "paths": {
@@ -153,7 +158,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/updateRequest"
+                "$ref": "#/components/schemas/UpdateRequest"
               }
             }
           }
@@ -164,7 +169,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/updateResponse"
+                  "$ref": "#/components/schemas/UpdateRequest"
                 }
               }
             }
@@ -184,66 +189,20 @@
         }
       }
     },
-    "/users/google": {
-      "get": {
-        "tags": ["Auth"],
-        "summary": "Google authentication. WARNING: Works only for sign-in, after registered on front-end (if you're writing your back-end for a SPECIFIC front-end, then you can configure it right to work both for sign-up & sign-in)",
-        "responses": {
-          "200": {
-            "description": "Successful operation (redirect to front-end with accessToken, refreshToken and sid in query). Then use GET /user/books",
-            "content": {}
-          },
-          "403": {
-            "description": "Not registered or registered with postman",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/users/google-redirect": {
-      "get": {
-        "tags": ["Auth"],
-        "summary": "Google authentication. WARNING: Works only for sign-in, after registered on front-end (if you're writing your back-end for a SPECIFIC front-end, then you can configure it right to work both for sign-up & sign-in)",
-        "responses": {
-          "200": {
-            "description": "Successful operation (redirect to front-end with accessToken, refreshToken and sid in query). Then use GET /user/books",
-            "content": {}
-          },
-          "403": {
-            "description": "Not registered or registered with postman",
-            "content": {}
-          }
-        }
-      }
-    },
+
     "/posts/": {
       "get": {
         "tags": ["Posts"],
         "summary": "Get all posts",
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
         "parameters": [],
-        "requestBody": {
-          "description": "Posts object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddBookRequest"
-              }
-            }
-          }
-        },
+        "requestBody": {},
         "responses": {
           "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddBookResponse"
+                  "$ref": "#/components/schemas/GetPostResponse"
                 }
               }
             }
@@ -264,7 +223,7 @@
       }
     },
 
-    "/posts/{userId}": {
+    "/posts/my": {
       "get": {
         "tags": ["Posts"],
         "summary": "Get post by user ID",
@@ -273,33 +232,19 @@
             "Bearer": []
           }
         ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "postId",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "description": "The Transaction ID"
-          }
-        ],
+
         "responses": {
           "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddBookRequest"
+                  "$ref": "#/components/schemas/GetPostResponse"
                 }
               }
             }
           },
-          "401": {
-            "description": "Invalid 'postId', you can't delete book that you've already read/reading / Invalid 'postId",
-            "content": {}
-          },
+
           "404": {
             "description": "Not found",
             "content": {}
@@ -321,25 +266,14 @@
             "Bearer": []
           }
         ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "postId",
-            "description": "post's id",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minimum": 1
-            }
-          }
-        ],
+
         "requestBody": {
           "description": "post's review object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/postReviewRequest"
+                "$ref": "#/components/schemas/AddPostRequest"
               }
             }
           }
@@ -350,7 +284,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/postReviewResponse"
+                  "$ref": "#/components/schemas/AddPostResponse"
                 }
               }
             }
@@ -383,14 +317,25 @@
             "Bearer": []
           }
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "postId",
+            "description": "post's id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1
+            }
+          }
+        ],
         "requestBody": {
           "description": "Posts object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddBookRequest"
+                "$ref": "#/components/schemas/AddPostRequest"
               }
             }
           }
@@ -401,7 +346,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddBookResponse"
+                  "$ref": "#/components/schemas/GetPostResponse"
                 }
               }
             }
@@ -422,7 +367,7 @@
       }
     },
     "/posts/favorite/{postId}": {
-      "patch": {
+      "put": {
         "tags": ["Posts"],
         "summary": "Add or del to favorite posts",
         "security": [
@@ -430,25 +375,25 @@
             "Bearer": []
           }
         ],
-        "parameters": [],
-        "requestBody": {
-          "description": "Posts object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddBookRequest"
-              }
+        "parameters": [
+          {
+            "in": "path",
+            "name": "postId",
+            "description": "post's id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddBookResponse"
+                  "$ref": "#/components/schemas/GetPostResponse"
                 }
               }
             }
@@ -468,7 +413,7 @@
         }
       }
     },
-    "/posts/favget/{userId}": {
+    "/posts/favget/": {
       "get": {
         "tags": ["Posts"],
         "summary": "Get favorite posts",
@@ -478,24 +423,14 @@
           }
         ],
         "parameters": [],
-        "requestBody": {
-          "description": "Posts object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddBookRequest"
-              }
-            }
-          }
-        },
+
         "responses": {
           "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddBookResponse"
+                  "$ref": "#/components/schemas/GetPostResponse"
                 }
               }
             }
@@ -530,7 +465,7 @@
             "name": "postId",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "minimum": 1
             },
             "description": "The Transaction ID"
@@ -542,15 +477,143 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddpostRequest"
+                  "$ref": "#/components/schemas/GetPostResponse"
+                }
+              }
+            }
+          },
+
+          "404": {
+            "description": "Not found",
+            "content": {}
+          },
+          "500": {
+            "description": "Server error",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/pet/": {
+      "get": {
+        "tags": ["Pets"],
+        "summary": "Get pet by user ID",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPetResponse"
                 }
               }
             }
           },
           "401": {
-            "description": "Invalid 'postId', you can't delete post that you've already read/reading / Invalid 'postId",
+            "description": "Invalid params",
             "content": {}
           },
+          "404": {
+            "description": "Not found",
+            "content": {}
+          },
+          "500": {
+            "description": "Server error",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/pet/add": {
+      "post": {
+        "tags": ["Pets"],
+        "summary": "Add pet",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+
+        "requestBody": {
+          "description": "pet's review object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddPetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body / Invalid 'postId' / No token provided",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {}
+          },
+          "403": {
+            "description": "post hasn't been finished yet",
+            "content": {}
+          },
+          "404": {
+            "description": "Invalid user / Invalid session",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/pet/del/{postId}": {
+      "delete": {
+        "tags": ["Pets"],
+        "summary": "Del pet",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "postId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1
+            },
+            "description": "The Transaction ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPetResponse"
+                }
+              }
+            }
+          },
+
           "404": {
             "description": "Not found",
             "content": {}
@@ -677,58 +740,7 @@
           }
         }
       },
-      "updateRequest": {
-        "type": "object",
-        "properties": {
-    "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "Ann",
-            "minLength": 2,
-            "maxLength": 80
-          },
-    "email": {
-            "type": "string",
-            "description": "User's email",
-            "example": "mail_on123@gmail.com",
-            "format": "email",
-            "minLength": 2,
-            "maxLength": 254
-    },
-    "password": {
-            "type": "string",
-            "description": "User's password",
-            "example": "qwerty123",
-            "minLength": 6     
-    },
-    "birthday": {
-            "type": "string",
-            "description": "User's birthday",
-            "example": "00.00.0000",
-            "minLength": 10
-          },
-    "phone": {
-            "type": "string",
-            "description": "User's phone",
-            "example": "+38000000000",
-            "minLength": 12,
-            "maxLength": 12
-    },
-    "location": {
-            "type": "string",
-            "description": "User's location",
-            "example": "Kyiv",
-            "minLength": 2,
-            "maxLength": 30
-    },
-    "avatarURL": {
-          "type": "string",
-          "description": "User's avatar",
-          "example": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fuk.wikipedia.org%2Fwiki%2F%25D0%259F%25D0%25B5%25D1%2580%25D0%25B5%25D0%25BA%25D0%25BB%25D0%25B0%25D0%25B4%25D0%25B0%25D1%2587_Google&psig=AOvVaw1dmOpWRFabw3eC4YyON3GA&ust=1685107611309000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCJirt5bJkP8CFQAAAAAdAAAAABAJ"
-    }
-        }
-      },
-      "updateResponse": {
+      "UpdateRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -737,668 +749,420 @@
             "example": "Ann",
             "minLength": 2,
             "maxLength": 80
-          },
-    "email": {
-            "type": "string",
-            "description": "User's email",
-            "example": "mail_on123@gmail.com",
-            "format": "email",
-            "minLength": 2,
-            "maxLength": 254
-    },
-    "password": {
-            "type": "string",
-            "description": "User's password",
-            "example": "qwerty123",
-            "minLength": 6     
-    },
-    "birthday": {
-            "type": "string",
-            "description": "User's birthday",
-            "example": "00.00.0000",
-            "minLength": 10
-          },
-    "phone": {
-            "type": "string",
-            "description": "User's phone",
-            "example": "+38000000000",
-            "minLength": 12,
-            "maxLength": 12
-    },
-    "location": {
-            "type": "string",
-            "description": "User's location",
-            "example": "Kyiv",
-            "minLength": 2,
-            "maxLength": 30
-    },
-    "avatarURL": {
-          "type": "string",
-          "description": "User's avatar",
-          "example": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fuk.wikipedia.org%2Fwiki%2F%25D0%259F%25D0%25B5%25D1%2580%25D0%25B5%25D0%25BA%25D0%25BB%25D0%25B0%25D0%25B4%25D0%25B0%25D1%2587_Google&psig=AOvVaw1dmOpWRFabw3eC4YyON3GA&ust=1685107611309000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCJirt5bJkP8CFQAAAAAdAAAAABAJ"
-    }
-        }
-      },
-      "AddBookRequest": {
-        "required": ["title", "author", "publishYear", "totalPages"],
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "example": "The Book of Five Rings",
-            "description": "Book's title",
-            "minLength": 1,
-            "maxLength": 254
-          },
-          "author": {
-            "type": "string",
-            "example": "Miyamoto Musashi",
-            "description": "Book's author",
-            "minLength": 2,
-            "maxLength": 254
-          },
-          "publishYear": {
-            "type": "integer",
-            "example": 1643,
-            "description": "Book's publish year"
-          },
-          "pagesTotal": {
-            "type": "integer",
-            "example": 110,
-            "description": "Book's total amount of pages",
-            "minimum": 1,
-            "maximum": 5000
-          }
-        }
-      },
-      "AddBookResponse": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "example": "The Book of Five Rings",
-            "description": "Book's title"
-          },
-          "author": {
-            "type": "string",
-            "example": "Miyamoto Musashi",
-            "description": "Book's author"
-          },
-          "publishYear": {
-            "type": "integer",
-            "example": 1643,
-            "description": "Book's publish year"
-          },
-          "pagesTotal": {
-            "type": "integer",
-            "example": 110,
-            "description": "Book's total amount of pages"
-          },
-          "pagesFinished": {
-            "type": "integer",
-            "example": 0,
-            "description": "Book's total amount of pages"
-          },
-          "_id": {
-            "type": "string",
-            "description": "Book's id",
-            "example": "507f1f77bcf86cd799439013"
-          },
-          "__v": {
-            "type": "integer",
-            "description": "MongoDB document service versionKey (ignore)"
-          }
-        }
-      },
-      "BookReviewRequest": {
-        "required": ["rating", "feedback"],
-        "type": "object",
-        "properties": {
-          "rating": {
-            "type": "integer",
-            "example": 5,
-            "description": "Book's rating",
-            "minimum": 0,
-            "maximum": 5
-          },
-          "feedback": {
-            "type": "string",
-            "example": "Really good book",
-            "description": "Book's feedback",
-            "minLength": 1,
-            "maxLength": 3000
-          }
-        }
-      },
-      "BookReviewResponse": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "example": "The Book of Five Rings",
-            "description": "Book's title"
-          },
-          "author": {
-            "type": "string",
-            "example": "Miyamoto Musashi",
-            "description": "Book's author"
-          },
-          "publishYear": {
-            "type": "integer",
-            "example": 1643,
-            "description": "Book's publish year"
-          },
-          "totalPages": {
-            "type": "integer",
-            "example": 110,
-            "description": "Book's total amount of pages"
-          },
-          "pagesFinished": {
-            "type": "integer",
-            "example": 110,
-            "description": "Book's total amount of pages"
-          },
-          "rating": {
-            "type": "integer",
-            "example": 5,
-            "description": "Book's rating",
-            "minimum": 0,
-            "maximum": 5
-          },
-          "feedback": {
-            "type": "string",
-            "example": "Really good book",
-            "description": "Book's feedback"
-          },
-          "_id": {
-            "type": "string",
-            "description": "Book's id",
-            "example": "507f1f77bcf86cd799439013"
-          },
-          "__v": {
-            "type": "integer",
-            "description": "MongoDB document service versionKey (ignore)"
-          }
-        }
-      },
-      "AddPlanningRequest": {
-        "required": ["startDate", "endDate", "books"],
-        "type": "object",
-        "properties": {
-          "startDate": {
-            "type": "string",
-            "example": "2020-12-31",
-            "description": "Planning's start date"
-          },
-          "endDate": {
-            "type": "string",
-            "example": "2020-01-05",
-            "description": "Planning's end date"
-          },
-          "books": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "description": "id of the book you want to add to planning"
-            },
-            "example": ["507f1f77bcf86cd799439013"]
-          }
-        }
-      },
-      "AddPlanningResponse": {
-        "type": "object",
-        "properties": {
-          "startDate": {
-            "type": "string",
-            "example": "2020-12-31",
-            "description": "Planning's start date"
-          },
-          "endDate": {
-            "type": "string",
-            "example": "2020-01-05",
-            "description": "Planning's end date"
-          },
-          "books": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "example": "The Book of Five Rings",
-                  "description": "Book's title"
-                },
-                "author": {
-                  "type": "string",
-                  "example": "Miyamoto Musashi",
-                  "description": "Book's author"
-                },
-                "publishYear": {
-                  "type": "integer",
-                  "example": 1643,
-                  "description": "Book's publish year"
-                },
-                "totalPages": {
-                  "type": "integer",
-                  "example": 110,
-                  "description": "Book's total amount of pages"
-                },
-                "pagesFinished": {
-                  "type": "integer",
-                  "example": 0,
-                  "description": "Book's total amount of pages"
-                },
-                "rating": {
-                  "type": "integer",
-                  "example": 5,
-                  "description": "Book's rating",
-                  "minimum": 0,
-                  "maximum": 5
-                },
-                "feedback": {
-                  "type": "string",
-                  "example": "Really good book",
-                  "description": "Book's feedback"
-                },
-                "_id": {
-                  "type": "string",
-                  "description": "Book's id",
-                  "example": "507f1f77bcf86cd799439013"
-                },
-                "__v": {
-                  "type": "integer",
-                  "description": "MongoDB document service versionKey (ignore)"
-                }
-              }
-            }
-          },
-          "duration": {
-            "type": "integer",
-            "description": "Duration of planning (in days)",
-            "example": 5
-          },
-          "pagesPerDay": {
-            "type": "integer",
-            "description": "Amount of pages needed to be read each day",
-            "example": 2
-          },
-          "stats": {
-            "type": "object",
-            "properties": {
-              "date": {
-                "type": "string",
-                "description": "Planning period day date",
-                "example": "2021-01-06"
-              },
-              "pagesCount": {
-                "type": "string",
-                "description": "Amount of pages read on this day",
-                "example": 35
-              }
-            }
-          },
-          "_id": {
-            "type": "string",
-            "description": "Planning id",
-            "example": "507f1f77bcf86cd799439014"
-          }
-        }
-      },
-      "ReadPagesRequest": {
-        "required": ["pages"],
-        "type": "object",
-        "properties": {
-          "pages": {
-            "type": "integer",
-            "example": 10,
-            "description": "Amount of pages read"
-          }
-        }
-      },
-      "ReadPagesResponse": {
-        "type": "object",
-        "properties": {
-          "book": {
-            "type": "object",
-            "properties": {
-              "title": {
-                "type": "string",
-                "example": "The Book of Five Rings",
-                "description": "Book's title"
-              },
-              "author": {
-                "type": "string",
-                "example": "Miyamoto Musashi",
-                "description": "Book's author"
-              },
-              "publishYear": {
-                "type": "integer",
-                "example": 1643,
-                "description": "Book's publish year"
-              },
-              "totalPages": {
-                "type": "integer",
-                "example": 110,
-                "description": "Book's total amount of pages"
-              },
-              "pagesFinished": {
-                "type": "integer",
-                "example": 10,
-                "description": "Book's total amount of pages"
-              },
-              "_id": {
-                "type": "string",
-                "description": "Book's id",
-                "example": "507f1f77bcf86cd799439013"
-              },
-              "__v": {
-                "type": "integer",
-                "description": "MongoDB document service versionKey (ignore)"
-              }
-            }
-          },
-          "planning": {
-            "type": "object",
-            "properties": {
-              "startDate": {
-                "type": "string",
-                "example": "2020-12-31",
-                "description": "Planning's start date"
-              },
-              "endDate": {
-                "type": "string",
-                "example": "2020-01-05",
-                "description": "Planning's end date"
-              },
-              "books": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "string",
-                      "description": "Book's id",
-                      "example": "507f1f77bcf86cd799439013"
-                    },
-                    "duration": {
-                      "type": "integer",
-                      "description": "Duration of planning (in days)",
-                      "example": 5
-                    },
-                    "pagesPerDay": {
-                      "type": "integer",
-                      "description": "Amount of pages needed to be read each day",
-                      "example": 2
-                    },
-                    "stats": {
-                      "type": "object",
-                      "properties": {
-                        "date": {
-                          "type": "string",
-                          "description": "Planning period day date",
-                          "example": "2021-01-06"
-                        },
-                        "pagesCount": {
-                          "type": "string",
-                          "description": "Amount of pages read on this day",
-                          "example": 35
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "_id": {
-                "type": "string",
-                "description": "Planning id",
-                "example": "507f1f77bcf86cd799439014"
-              }
-            }
-          }
-        }
-      },
-      "GetPlanning": {
-        "type": "object",
-        "properties": {
-          "startDate": {
-            "type": "string",
-            "example": "2020-12-31",
-            "description": "Planning's start date"
-          },
-          "endDate": {
-            "type": "string",
-            "example": "2020-01-05",
-            "description": "Planning's end date"
-          },
-          "books": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "example": "The Book of Five Rings",
-                  "description": "Book's title"
-                },
-                "author": {
-                  "type": "string",
-                  "example": "Miyamoto Musashi",
-                  "description": "Book's author"
-                },
-                "publishYear": {
-                  "type": "integer",
-                  "example": 1643,
-                  "description": "Book's publish year"
-                },
-                "totalPages": {
-                  "type": "integer",
-                  "example": 110,
-                  "description": "Book's total amount of pages"
-                },
-                "pagesFinished": {
-                  "type": "integer",
-                  "example": 0,
-                  "description": "Book's total amount of pages"
-                },
-                "rating": {
-                  "type": "integer",
-                  "example": 5,
-                  "description": "Book's rating",
-                  "minimum": 0,
-                  "maximum": 5
-                },
-                "feedback": {
-                  "type": "string",
-                  "example": "Really good book",
-                  "description": "Book's feedback"
-                },
-                "_id": {
-                  "type": "string",
-                  "description": "Book's id",
-                  "example": "507f1f77bcf86cd799439013"
-                },
-                "__v": {
-                  "type": "integer",
-                  "description": "MongoDB document service versionKey (ignore)"
-                }
-              }
-            }
-          },
-          "duration": {
-            "type": "integer",
-            "description": "Duration of planning (in days)",
-            "example": 5
-          },
-          "pagesPerDay": {
-            "type": "integer",
-            "description": "Amount of pages needed to be read each day",
-            "example": 2
-          },
-          "stats": {
-            "type": "object",
-            "properties": {
-              "date": {
-                "type": "string",
-                "description": "Planning period day date",
-                "example": "2021-01-06"
-              },
-              "pagesCount": {
-                "type": "string",
-                "description": "Amount of pages read on this day",
-                "example": 35
-              }
-            }
-          },
-          "_id": {
-            "type": "string",
-            "description": "Planning id",
-            "example": "507f1f77bcf86cd799439014"
-          }
-        }
-      },
-      "GetBooksAndEmail": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "Test"
           },
           "email": {
             "type": "string",
             "description": "User's email",
-            "format": "email"
+            "example": "mail_on123@gmail.com",
+            "format": "email",
+            "minLength": 2,
+            "maxLength": 254
           },
-          "goingToRead": {
-            "type": "array",
-            "description": "User's books, that hasn't been started yet",
-            "items": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "example": "The Book of Five Rings",
-                  "description": "Book's title"
-                },
-                "author": {
-                  "type": "string",
-                  "example": "Miyamoto Musashi",
-                  "description": "Book's author"
-                },
-                "publishYear": {
-                  "type": "integer",
-                  "example": 1643,
-                  "description": "Book's publish year"
-                },
-                "totalPages": {
-                  "type": "integer",
-                  "example": 110,
-                  "description": "Book's total amount of pages"
-                },
-                "pagesFinished": {
-                  "type": "integer",
-                  "example": 110,
-                  "description": "Book's total amount of pages"
-                },
-                "_id": {
-                  "type": "string",
-                  "description": "Book's id",
-                  "example": "507f1f77bcf86cd799439013"
-                },
-                "__v": {
-                  "type": "integer",
-                  "description": "MongoDB document service versionKey (ignore)"
-                }
-              }
-            }
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123",
+            "minLength": 6
           },
-          "currentlyReading": {
-            "type": "array",
-            "description": "User's books, that he's currently reading",
-            "items": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "example": "The Book of Five Rings",
-                  "description": "Book's title"
-                },
-                "author": {
-                  "type": "string",
-                  "example": "Miyamoto Musashi",
-                  "description": "Book's author"
-                },
-                "publishYear": {
-                  "type": "integer",
-                  "example": 1643,
-                  "description": "Book's publish year"
-                },
-                "totalPages": {
-                  "type": "integer",
-                  "example": 110,
-                  "description": "Book's total amount of pages"
-                },
-                "pagesFinished": {
-                  "type": "integer",
-                  "example": 110,
-                  "description": "Book's total amount of pages"
-                },
-                "_id": {
-                  "type": "string",
-                  "description": "Book's id",
-                  "example": "507f1f77bcf86cd799439013"
-                },
-                "__v": {
-                  "type": "integer",
-                  "description": "MongoDB document service versionKey (ignore)"
-                }
-              }
-            },
-            "example": []
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "00.00.0000",
+            "minLength": 10
           },
-          "finishedReading": {
+          "phone": {
+            "type": "string",
+            "description": "User's phone",
+            "example": "+38000000000",
+            "minLength": 12,
+            "maxLength": 12
+          },
+          "location": {
+            "type": "string",
+            "description": "User's location",
+            "example": "Kyiv",
+            "minLength": 2,
+            "maxLength": 30
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar",
+            "example": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fuk.wikipedia.org%2Fwiki%2F%25D0%259F%25D0%25B5%25D1%2580%25D0%25B5%25D0%25BA%25D0%25BB%25D0%25B0%25D0%25B4%25D0%25B0%25D1%2587_Google&psig=AOvVaw1dmOpWRFabw3eC4YyON3GA&ust=1685107611309000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCJirt5bJkP8CFQAAAAAdAAAAABAJ"
+          }
+        }
+      },
+
+      "AddPostRequest": {
+        "required": [
+          "title",
+          "name",
+          "petBirthday",
+          "breed",
+          "price",
+          "sex",
+          "description",
+          "category",
+          "location",
+          "avatar"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Sell my preaty dog",
+            "description": "Post title",
+            "minLength": 1,
+            "maxLength": 254
+          },
+          "name": {
+            "type": "string",
+            "example": "Miyamoto Musashi",
+            "description": "Post author",
+            "minLength": 2,
+            "maxLength": 40
+          },
+          "petBirthday": {
+            "type": "string",
+            "example": "01.01.2000",
+            "minlength": 10,
+            "maxlength": 10,
+            "description": "Pet Birthday year"
+          },
+          "breed": {
+            "type": "string",
+            "example": "Spaniel",
+            "description": "Pet breed",
+            "minlength": 3,
+            "maxlength": 20
+          },
+          "price": {
+            "type": "string",
+            "example": "110$",
+            "description": "Pet price",
+            "minlength": 1,
+            "maxlength": 18
+          },
+          "sex": {
+            "type": "string",
+            "example": "Male",
+            "description": "Set sex for your pet",
+            "minlength": 4,
+            "maxlength": 6
+          },
+          "description": {
+            "type": "string",
+            "example": "This is my dog...",
+            "description": "Set description for your post",
+            "minlength": 10,
+            "maxlength": 280
+          },
+          " category": {
+            "type": "string",
+            "example": "sell, lost-found, for-free",
+            "description": "Set category for your pet",
+            "minlength": 4,
+            "maxlength": 10
+          },
+          "location": {
+            "type": "string",
+            "example": "Kyiv",
+            "description": "Set location for your post",
+            "minlength": 2,
+            "maxlength": 30
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://www.purina.co.uk/sites/default/files/styles/",
+            "description": "Set avatar link for your pet",
+            "minlength": 4,
+            "maxlength": 10
+          }
+        }
+      },
+      "AddPostResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Sell my preaty dog",
+            "description": "Post title",
+            "minLength": 1,
+            "maxLength": 254
+          },
+          "name": {
+            "type": "string",
+            "example": "Miyamoto Musashi",
+            "description": "Post author",
+            "minLength": 2,
+            "maxLength": 40
+          },
+          "petBirthday": {
+            "type": "string",
+            "example": "01.01.2000",
+            "minlength": 10,
+            "maxlength": 10,
+            "description": "Pet Birthday year"
+          },
+          "breed": {
+            "type": "string",
+            "example": "Spaniel",
+            "description": "Pet breed",
+            "minlength": 3,
+            "maxlength": 20
+          },
+          "price": {
+            "type": "string",
+            "example": "110$",
+            "description": "Pet price",
+            "minlength": 1,
+            "maxlength": 18
+          },
+          "sex": {
+            "type": "string",
+            "example": "Male",
+            "description": "Set sex for your pet",
+            "minlength": 4,
+            "maxlength": 6
+          },
+          "description": {
+            "type": "string",
+            "example": "This is my dog...",
+            "description": "Set description for your post",
+            "minlength": 10,
+            "maxlength": 280
+          },
+          " category": {
+            "type": "string",
+            "example": "sell, lost-found, for-free",
+            "description": "Set category for your pet",
+            "minlength": 4,
+            "maxlength": 10
+          },
+          "location": {
+            "type": "string",
+            "example": "Kyiv",
+            "description": "Set location for your post",
+            "minlength": 2,
+            "maxlength": 30
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://www.purina.co.uk/sites/default/files/styles/",
+            "description": "Set avatar link for your pet",
+            "minlength": 4,
+            "maxlength": 10
+          },
+          "favorite": {
             "type": "array",
-            "description": "User's books, that he already has finished",
-            "items": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "example": "The Book of Five Rings",
-                  "description": "Book's title"
-                },
-                "author": {
-                  "type": "string",
-                  "example": "Miyamoto Musashi",
-                  "description": "Book's author"
-                },
-                "publishYear": {
-                  "type": "integer",
-                  "example": 1643,
-                  "description": "Book's publish year"
-                },
-                "totalPages": {
-                  "type": "integer",
-                  "example": 110,
-                  "description": "Book's total amount of pages"
-                },
-                "pagesFinished": {
-                  "type": "integer",
-                  "example": 110,
-                  "description": "Book's total amount of pages"
-                },
-                "_id": {
-                  "type": "string",
-                  "description": "Book's id",
-                  "example": "507f1f77bcf86cd799439013"
-                },
-                "__v": {
-                  "type": "integer",
-                  "description": "MongoDB document service versionKey (ignore)"
-                }
-              }
-            },
-            "example": []
+            "example": "[64747a4756c34fa3d3fcf31b]",
+            "minlength": 2,
+            "maxlength": 30
+          },
+          "owner": {
+            "type": "array",
+            "example": "{id:6470ad832cfa126519500989,email:inga@mail.com,phone:+38000000000}",
+            "minlength": 2,
+            "maxlength": 30
+          }
+        }
+      },
+      "GetPostResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Sell my preaty dog",
+            "description": "Post title",
+            "minLength": 1,
+            "maxLength": 254
+          },
+          "name": {
+            "type": "string",
+            "example": "Miyamoto Musashi",
+            "description": "Post author",
+            "minLength": 2,
+            "maxLength": 40
+          },
+          "petBirthday": {
+            "type": "string",
+            "example": "01.01.2000",
+            "minlength": 10,
+            "maxlength": 10,
+            "description": "Pet Birthday year"
+          },
+          "breed": {
+            "type": "string",
+            "example": "Spaniel",
+            "description": "Pet breed",
+            "minlength": 3,
+            "maxlength": 20
+          },
+          "price": {
+            "type": "string",
+            "example": "110$",
+            "description": "Pet price",
+            "minlength": 1,
+            "maxlength": 18
+          },
+          "sex": {
+            "type": "string",
+            "example": "Male",
+            "description": "Set sex for your pet",
+            "minlength": 4,
+            "maxlength": 6
+          },
+          "description": {
+            "type": "string",
+            "example": "This is my dog...",
+            "description": "Set description for your post",
+            "minlength": 10,
+            "maxlength": 280
+          },
+          "category": {
+            "type": "string",
+            "example": "sell, lost-found, for-free",
+            "description": "Set category for your pet",
+            "minlength": 4,
+            "maxlength": 10
+          },
+          "location": {
+            "type": "string",
+            "example": "Kyiv",
+            "description": "Set location for your post",
+            "minlength": 2,
+            "maxlength": 30
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://www.purina.co.uk/sites/default/files/styles/",
+            "description": "Set avatar link for your pet",
+            "minlength": 4,
+            "maxlength": 10
+          },
+          "favorite": {
+            "type": "array",
+            "example": "[64747a4756c34fa3d3fcf31b]",
+            "minlength": 2,
+            "maxlength": 30
+          },
+          "owner": {
+            "type": "array",
+            "example": "{id:6470ad832cfa126519500989,email:inga@mail.com,phone:+38000000000}",
+            "minlength": 2,
+            "maxlength": 30
+          },
+          "_id": {
+            "type": "string",
+            "description": "Post id",
+            "example": "646f7ed3097a610ea1c91e7b"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "2023-05-27T16:13:22.740Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "2023-05-28T18:29:08.687Z"
+          }
+        }
+      },
+      "GetPetResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Barsik",
+            "description": "Pet name",
+            "minLength": 2,
+            "maxLength": 40
+          },
+          "petBirthday": {
+            "type": "string",
+            "example": "01.01.2000",
+            "minlength": 10,
+            "maxlength": 10,
+            "description": "Pet Birthday year"
+          },
+          "breed": {
+            "type": "string",
+            "example": "Spaniel",
+            "description": "Pet breed",
+            "minlength": 3,
+            "maxlength": 20
+          },
+          "comments": {
+            "type": "string",
+            "example": "This is my dog...",
+            "description": "Set description for your post",
+            "minlength": 10,
+            "maxlength": 280
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://www.purina.co.uk/sites/default/files/styles/",
+            "description": "Set avatar link for your pet",
+            "minlength": 4,
+            "maxlength": 10
+          },
+
+          "owner": {
+            "type": "array",
+            "example": "{id:6470ad832cfa126519500989}",
+            "minlength": 2,
+            "maxlength": 30
+          },
+          "_id": {
+            "type": "string",
+            "description": "Post id",
+            "example": "646f7ed3097a610ea1c91e7b"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "2023-05-27T16:13:22.740Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "2023-05-28T18:29:08.687Z"
+          }
+        }
+      },
+      "AddPetRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Barsik",
+            "description": "Pet name",
+            "minLength": 2,
+            "maxLength": 40
+          },
+          "petBirthday": {
+            "type": "string",
+            "example": "01.01.2000",
+            "minlength": 10,
+            "maxlength": 10,
+            "description": "Pet Birthday year"
+          },
+          "breed": {
+            "type": "string",
+            "example": "Spaniel",
+            "description": "Pet breed",
+            "minlength": 3,
+            "maxlength": 20
+          },
+          "comments": {
+            "type": "string",
+            "example": "This is my dog...",
+            "description": "Set description for your post",
+            "minlength": 10,
+            "maxlength": 280
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://www.purina.co.uk/sites/default/files/styles/",
+            "description": "Set avatar link for your pet",
+            "minlength": 4,
+            "maxlength": 10
           }
         }
       }

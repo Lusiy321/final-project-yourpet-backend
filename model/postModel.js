@@ -7,6 +7,8 @@ const postSchema = new Schema(
   {
     title: {
       type: String,
+      minlength: 1,
+      maxlength: 254,
       require: [true, "Set title for your post"],
     },
     name: {
