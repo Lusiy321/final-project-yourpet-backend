@@ -12,7 +12,7 @@ const usersSchema = new Schema(
       type: String,
       minlength: 3,
       maxlength: 30,
-      default: "User",
+      default: null,
     },
 
     email: {

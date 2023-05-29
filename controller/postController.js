@@ -8,10 +8,19 @@ const KEY = process.env.SECRET_KEY;
 const get = async (req, res, next) => {
   try {
     const { ...params } = req.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const totalCount = await Post.countDocuments();
+    const totalPages = Math.ceil(totalCount / limit);
+    const offset = (page - 1) * limit;
 
-    const result = await Post.find({ ...params }, "-createdAt -updatedAt");
+    const result = await Post.find({ ...params }, "-createdAt -updatedAt")
+      .skip(offset)
+      .limit(limit);
     res.json({
       status: "success",
+      totalPages,
+      currentPage: page,
       code: 200,
       data: { posts: result },
     });
