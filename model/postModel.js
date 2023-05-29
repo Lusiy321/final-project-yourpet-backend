@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Joi = require("joi");
+const nameRegexp = /^[a-zA-Z. ']+$/;
 
 const postSchema = new Schema(
   {
@@ -73,6 +75,20 @@ const postSchema = new Schema(
 
 const Post = mongoose.model("posts", postSchema);
 
+const postJoi = Joi.object({
+  title: Joi.string().min(2).max(60).required(),
+  name: Joi.string().pattern(nameRegexp).min(3).max(30).required(),
+  petBirthday: Joi.string().min(10).max(10).required(),
+  breed: Joi.string().min(2).max(15).required(),
+  price: Joi.string().min(2).max(15).required(),
+  sex: Joi.string().min(4).max(6).required(),
+  location: Joi.string().min(2).max(15).required(),
+  avatar: Joi.string().required(),
+  category: Joi.string().required(),
+  description: Joi.string().min(2).max(200).required(),
+});
+
 module.exports = {
   Post,
+  postJoi,
 };

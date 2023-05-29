@@ -140,51 +140,6 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-// async function googleAuth(_req, res) {
-//   const fieldParams = queryString.stringyfy({
-//     client_id: GOOGLE_CLIENT_ID,
-//     redirect_uri: `${BASE_URL}:${PORT}/users/google-redirect`,
-//     scope: [
-//       "https://www.googleapis.com/auth/userinfo.email",
-//       "https://www.googleapis.com/auth/userinfo.profile",
-//     ].join(""),
-//     response_type: "code",
-//     access_type: "offline",
-//     promt: "consent",
-//   });
-//   return res.redirect(
-//     `https://account.google.com/o/oauth2/v2/auth?${fieldParams}`
-//   );
-// }
-
-// async function googleRedirect(req, res) {
-//   const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
-//   const urlObj = new URL(fullUrl);
-//   const urlParams = queryString.parse(urlObj.search);
-//   const code = urlParams.code;
-//   const tokenData = await axios({
-//     url: `https://oauth2.googleapis.com/token`,
-//     method: "post",
-//     data: {
-//       client_id: GOOGLE_CLIENT_ID,
-//       client_secret: GOOGLE_CLIENT_SECRET,
-//       redirect_uri: `${BASE_URL}:${PORT}/users/google-redirect`,
-//       grant_type: "authorization_code",
-//       code,
-//     },
-//   });
-//   const userData = await axios({
-//     url: "https://www.googleapis.com/oauth2/v2/userinfo",
-//     method: "get",
-//     headers: {
-//       Authorization: `Bearer ${tokenData.data.access_token}`,
-//     },
-//   });
-//   // логика для регистрации
-
-//   return res.redirect(`${FRONTEND_URL}?email=${userData.data.email}`);
-// }
-
 module.exports = {
   loginUser,
   logoutUser,

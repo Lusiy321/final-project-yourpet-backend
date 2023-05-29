@@ -4,13 +4,13 @@ const cors = require("cors");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const usrRouter = require("./routes/api/usrRouter");
+const postRouter = require("./routes/api/postRouter");
+const petRouter = require("./routes/api/petRouter");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
 const PORT = process.env.PORT;
 const DB_HOST = process.env.DB_HOST;
-
-const postRouter = require("./routes/api/postRouter");
 
 const app = express();
 
@@ -22,6 +22,7 @@ app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/posts", postRouter);
 app.use("/users", usrRouter);
+app.use("/pet", petRouter);
 app.use("/friends", express.static("public"));
 
 app.get("/", async (req, res) => {

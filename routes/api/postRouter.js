@@ -8,7 +8,8 @@ const {
   upStatus,
   getFav,
 } = require("../../controller/postController");
-const { userAuth } = require("../../service/userAuth");
+const { userAuth, validation } = require("../../service/userAuth");
+const { postJoi } = require("../../model/postModel");
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.put("/:postId", userAuth, update); // Обновить пост
 
 router.get("/my", userAuth, getMy); // Запросить посты по ID пользователя (owner)
 
-router.post("/add", userAuth, create); // Создать пост
+router.post("/add", userAuth, validation(postJoi), create); // Создать пост
 
 router.delete("/del/:postId", userAuth, remove); // Удалить пост
 

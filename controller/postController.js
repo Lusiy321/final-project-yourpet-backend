@@ -35,7 +35,7 @@ const getMy = async (req, res, next) => {
     }
     const { id } = jwt.verify(token, KEY);
 
-    const result = await Post.find({ owner: id }, "-createdAt -updatedAt");
+    const result = await Post.find({ "owner.id": id });
     res.json({
       status: "success",
       code: 200,
@@ -45,7 +45,7 @@ const getMy = async (req, res, next) => {
     res.json({
       status: "error",
       code: 404,
-      message: `Not found contact id`,
+      message: `Not found`,
       data: "Not Found",
     });
     next(e);
