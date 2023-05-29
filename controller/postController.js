@@ -219,21 +219,31 @@ const upStatus = async (req, res, next) => {
 
   try {
     const document = await Post.findOne({ _id: postId });
-    if (document.favorite === id) {
-      await Post.updateOne(
-        {
-          _id: postId,
-        },
-        { $pull: { favorite: id } }
-      );
+    if (document) {
+      const array = document.favorite;
+      if (Array.isArray(array)) {
+        const index = array.indexOf(id);
+
+        if (index > -1) {
+          array.splice(index, 1);
+        } else {
+          array.push(id);
+        }
+        await Post.updateOne(
+          {
+            _id: postId,
+          },
+          { $set: { favorite: array } }
+        );
+      }
     }
-    if (!document.favorite === id) {
-      await Post.updateOne(
-        {
-          _id: postId,
-        },
-        { $push: { favorite: id } }
-      );
+    if (!document) {
+      res.json({
+        status: "error",
+        code: 404,
+        message: `missing field`,
+        data: "Not Found",
+      });
     }
     return res.json({
       status: "success",
@@ -253,13 +263,15 @@ const upStatus = async (req, res, next) => {
 
 const getFav = async (req, res, next) => {
   try {
-    const { _id: favorite } = req.user;
-    const { ...params } = req.query;
+    const { authorization = "" } = req.headers;
+    const [bearer, token] = authorization.split(" ");
 
-    const result = await Post.find(
-      { favorite, ...params },
-      "-createdAt -updatedAt"
-    );
+    if (bearer !== "Bearer") {
+      throw new Unauthorized("Not authorized");
+    }
+    const { id } = jwt.verify(token, KEY);
+
+    const result = await Post.find({ favorite: id });
     res.json({
       status: "success",
       code: 200,

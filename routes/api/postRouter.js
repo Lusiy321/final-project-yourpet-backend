@@ -6,6 +6,7 @@ const {
   remove,
   update,
   upStatus,
+  getFav,
 } = require("../../controller/postController");
 const { userAuth } = require("../../service/userAuth");
 
@@ -23,6 +24,6 @@ router.delete("/del/:postId", userAuth, remove); // Удалить пост
 
 router.put("/favorite/:postId", userAuth, upStatus); // Добавить или удалить из избранного
 
-router.get("/favget/:userId", userAuth, getMy); // Запросить избранные посты по ID пользователя (favorit)
+router.get("/favget/", userAuth, getFav); // Запросить избранные посты по ID пользователя (favorit)
 
 module.exports = router;
