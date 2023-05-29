@@ -12,6 +12,7 @@ const usersSchema = new Schema(
       type: String,
       minlength: 2,
       maxlength: 60,
+      default: null,
     },
 
     email: {
@@ -61,7 +62,10 @@ const usersSchema = new Schema(
 usersSchema.methods.setPassword = function (password) {
   this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 };
-
+usersSchema.methods.setName = function (email) {
+  const parts = email.split("@");
+  this.name = parts[0];
+};
 usersSchema.methods.comparePassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };

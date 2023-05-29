@@ -86,6 +86,7 @@ async function signupUser(req, res, next) {
 
     const newUser = new User({ email });
     newUser.setPassword(password);
+    newUser.setName(email);
     newUser.save();
 
     res.status(201).json({
