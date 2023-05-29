@@ -49,7 +49,8 @@ const usersSchema = new Schema(
     },
     avatarURL: {
       type: String,
-      default: "",
+      default:
+        "https://final-project-yourpe-backend.onrender.com/public/photo_default_desktop.png",
     },
     token: {
       type: String,
