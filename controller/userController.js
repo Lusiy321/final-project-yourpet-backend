@@ -44,11 +44,12 @@ async function loginUser(req, res, next) {
     };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
     await User.findByIdAndUpdate(authentificationUser._id, { token });
+
     return res.json({
       status: "success",
       code: 200,
       data: {
-        token,
+        authentificationUser,
       },
     });
   } catch (error) {
@@ -79,10 +80,14 @@ async function signupUser(req, res, next) {
     if (registrationUser) {
       throw new Conflict(`User with ${email} in use`);
     }
+    // const random = function getRandomNumber(min, max) {
+    //   return Math.floor(Math.random() * (max - min + 1)) + min;
+    // };
 
     const newUser = new User({ email });
     newUser.setPassword(password);
     newUser.save();
+
     res.status(201).json({
       status: "success",
       code: 201,

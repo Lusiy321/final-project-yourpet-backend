@@ -1,20 +1,17 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const { v4: uuidv4 } = require("uuid");
 
 const Joi = require("joi");
 const emailRegexp =
   /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/;
 const bcrypt = require("bcryptjs");
-const names = uuidv4();
 
 const usersSchema = new Schema(
   {
     name: {
       type: String,
-      minlength: 3,
+      minlength: 2,
       maxlength: 60,
-      default: names,
     },
 
     email: {
