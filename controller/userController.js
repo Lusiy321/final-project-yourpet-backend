@@ -37,20 +37,18 @@ const getUser = async (req, res, next) => {
 async function loginUser(req, res, next) {
   try {
     const { email, password } = req.body;
-    const authentificationUser = await User.findOne({ email });
-    if (
-      !authentificationUser ||
-      !authentificationUser.comparePassword(password)
-    ) {
+    const authUser = await User.findOne({ email });
+    if (!authUser || !authUser.comparePassword(password)) {
       throw new Unauthorized(`Email or password is wrong`);
     }
 
     const payload = {
-      id: authentificationUser._id,
+      id: authUser._id,
     };
+    
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
-    await User.findByIdAndUpdate(authentificationUser._id, { token });
-
+    await User.findByIdAndUpdate(authUser._id, { token });
+    const authentificationUser = await User.findById({ _id: authUser._id });
     return res.json({
       status: "success",
       code: 200,
