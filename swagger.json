@@ -189,7 +189,43 @@
         }
       }
     },
+    "/users/": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [],
 
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body / No token provided",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (invalid refresh token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Invalid user / Invalid session",
+            "content": {}
+          }
+        }
+      }
+    },
     "/posts/": {
       "get": {
         "tags": ["Posts"],

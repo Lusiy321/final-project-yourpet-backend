@@ -9,9 +9,15 @@ const KEY = process.env.SECRET_KEY;
 
 const getUser = async (req, res, next) => {
   try {
-    const { ...params } = req.query;
+    const { authorization = "" } = req.headers;
+    const [bearer, token] = authorization.split(" ");
 
-    const result = await User.find({ ...params }, "-createdAt -updatedAt");
+    if (bearer !== "Bearer") {
+      throw new Unauthorized("Not authorized");
+    }
+    const { id } = jwt.verify(token, KEY);
+
+    const result = await User.findById({ _id: id });
     res.json({
       status: "success",
       code: 200,
@@ -80,9 +86,6 @@ async function signupUser(req, res, next) {
     if (registrationUser) {
       throw new Conflict(`User with ${email} in use`);
     }
-    // const random = function getRandomNumber(min, max) {
-    //   return Math.floor(Math.random() * (max - min + 1)) + min;
-    // };
 
     const newUser = new User({ email });
     newUser.setPassword(password);
@@ -112,7 +115,8 @@ const updateUser = async (req, res, next) => {
   const { ...params } = req.body;
 
   try {
-    const result = await User.findByIdAndUpdate({ _id: id }, { ...params });
+    await User.findByIdAndUpdate({ _id: id }, { ...params });
+    const result = await User.findById({ _id: id });
     if (!result) {
       res.status(400).json({
         status: "error",

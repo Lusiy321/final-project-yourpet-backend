@@ -20,6 +20,6 @@ router.post("/logout", userAuth, usersController.logoutUser);
 
 router.put("/update", userAuth, usersController.updateUser);
 
-router.get("/", usersController.getUser);
+router.get("/", userAuth, usersController.getUser);
 
 module.exports = router;
