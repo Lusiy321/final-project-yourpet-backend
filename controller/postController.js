@@ -111,7 +111,7 @@ const create = async (req, res, next) => {
     res.json({
       status: "error",
       code: 404,
-      message: `Not found`,
+      message: e.message,
       data: "Not Found",
     });
     next(e);
@@ -162,7 +162,7 @@ const update = async (req, res, next) => {
     res.json({
       status: "error",
       code: 400,
-      message: `missing field`,
+      message: e.message,
       data: "Not Found",
     });
     next(e);
@@ -206,7 +206,7 @@ const remove = async (req, res, next) => {
     res.json({
       status: "error",
       code: 400,
-      message: `missing field`,
+      message: e.message,
       data: "Not Found",
     });
     next(e);
@@ -260,7 +260,7 @@ const upStatus = async (req, res, next) => {
     res.json({
       status: "error",
       code: 400,
-      message: `missing field`,
+      message: e.message,
       data: "Not Found",
     });
     next(e);
