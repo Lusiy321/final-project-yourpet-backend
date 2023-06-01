@@ -29,3 +29,5 @@
 - `npm lint:fix` &mdash; та ж перевірка лінтера, але з автоматичними виправленнями простих помилок
 
 - `/docs` &mdash; swagger documentation.
+
+![Swagger](https://github.com/Lusiy321/final-project-yourpet-backend/assets/107991551/7a653e40-9099-4e3c-b7ef-26ee4c327e5e)
