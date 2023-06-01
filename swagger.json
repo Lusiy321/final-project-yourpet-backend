@@ -892,7 +892,7 @@
             "minlength": 10,
             "maxlength": 280
           },
-          " category": {
+          "category": {
             "type": "string",
             "example": "sell, lost-found, for-free",
             "description": "Set category for your pet",
@@ -967,7 +967,7 @@
             "minlength": 10,
             "maxlength": 280
           },
-          " category": {
+          "category": {
             "type": "string",
             "example": "sell, lost-found, for-free",
             "description": "Set category for your pet",
