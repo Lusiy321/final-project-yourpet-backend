@@ -8,26 +8,26 @@ const petSchema = new Schema(
     name: {
       type: String,
       minlength: 2,
-      maxlength: 40,
+      maxlength: 16,
       require: [true, "Set name for your pet"],
     },
     petBirthday: {
       type: String,
-      minlength: 10,
-      maxlength: 10,
+      minlength: 1,
+      maxlength: 112,
       require: [true, "Set birthday date for your pet"],
     },
     breed: {
       type: String,
-      minlength: 3,
-      maxlength: 20,
+      minlength: 2,
+      maxlength: 16,
       require: [true, "Set breed for your pet"],
     },
 
     comments: {
       type: String,
-      minlength: 10,
-      maxlength: 280,
+      minlength: 8,
+      maxlength: 120,
       require: [true, "Set description for your pet"],
     },
 
