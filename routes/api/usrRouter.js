@@ -29,7 +29,7 @@ router.get(
 
 router.get("/google/callback", passport.authenticate("google"), (req, res) => {
   res.redirect(
-    "https://tetianazinchenko.github.io/final-project-yourpet-frontend/user"
+    "https://tetianazinchenko.github.io/final-project-yourpet-frontend/login"
   );
 });
 

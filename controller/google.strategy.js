@@ -5,6 +5,7 @@ require("dotenv").config();
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REDIR_URL = process.env.REDIR_URL;
+
 passport.use(
   new GoogleStrategy(
     {
@@ -19,7 +20,7 @@ passport.use(
         id: profile.id,
         email: profile.emails[0].value,
         name: profile.displayName,
-        accessToken: accessToken,
+        token: accessToken,
       };
       done(null, user);
     }
