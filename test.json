@@ -1,0 +1,122 @@
+{
+  "status": "success",
+  "code": 200,
+  "data": {
+    "posts": [
+      {
+        "_id": "64706d13ad23628fb766b59b",
+        "title": "Sell my preaty dog",
+        "name": "Rich",
+        "petBirthday": "12.20.2020",
+        "breed": "Pikines",
+        "price": "300$",
+        "sex": "Male",
+        "description": "Sell my preaty dog. 2 years old, He are good friend.",
+        "category": "sell",
+        "location": "Riga",
+        "avatar": "https://i.guim.co.uk/img/media/03734ee186eba543fb3d0e35db2a90a14a5d79e3/0_173_5200_3120/master/5200.jpg?width=620&quality=85&dpr=1&s=none",
+        "favorite": [],
+        "owner": {
+          "id": "646f7ed3097a610ea1c91e7b",
+          "email": "mail_ann@gmail.com",
+          "phone": "+38000000000"
+        }
+      },
+      {
+        "_id": "6470aff92cfa126519500995",
+        "title": "Sell yorkshire terrier, boy named Phil",
+        "name": "Philip",
+        "petBirthday": "01.02.2018",
+        "breed": "Yorkshire",
+        "price": "600$",
+        "sex": "Male",
+        "description": "Sell preaty dog. 5 years old. He would be a good friend for your children and you.",
+        "category": "sell",
+        "location": "Lviv",
+        "avatar": "https://www.purina.co.uk/sites/default/files/styles/square_medium_440x440/public/2022-09/Yorkshire%20Terrier.jpg?h=5a48805e&itok=W6ZnjJac",
+        "favorite": ["6470ad832cfa126519500989"],
+        "owner": {
+          "id": "6470ad832cfa126519500989",
+          "email": "inga@mail.com",
+          "phone": "+38000000000"
+        }
+      },
+      {
+        "_id": "6470bfd96a75dc251eaf5eca",
+        "title": "Cute dog looking for a home!",
+        "name": "Max",
+        "petBirthday": "01.02.2023",
+        "breed": "Labrador",
+        "price": "200$",
+        "sex": "Male",
+        "description": "Sell preaty dog. 5 years old. He would be a good friend for your children and you.",
+        "category": "sell",
+        "location": "Kyiv",
+        "avatar": "https://hips.hearstapps.com/hmg-prod/images/labrador-puppy-royalty-free-image-1626252338.jpg?crop=0.667xw:1.00xh;0.173xw,0&resize=2048:*",
+        "favorite": [],
+        "owner": {
+          "id": "6470ad832cfa126519500989",
+          "email": "inga@mail.com",
+          "phone": "+38000000000"
+        }
+      },
+      {
+        "_id": "6470c1176a75dc251eaf5ed2",
+        "title": "Lovely girl will make you happy",
+        "name": "Leila",
+        "petBirthday": "20.04.2023",
+        "breed": "Pug",
+        "price": "350$",
+        "sex": "female",
+        "description": "Sell preaty dog. 5 years old. He would be a good friend for your children and you.",
+        "category": "sell",
+        "location": "Chernihiv",
+        "avatar": "https://www.akc.org/wp-content/uploads/2017/11/Pug-puppy-standing-in-profile-on-a-white-background.jpg",
+        "favorite": [],
+        "owner": {
+          "id": "6470ad832cfa126519500989",
+          "email": "inga@mail.com",
+          "phone": "+38000000000"
+        }
+      },
+      {
+        "_id": "6470c93e6a75dc251eaf5efd",
+        "title": "Little doggy want to find a family",
+        "name": "Busya",
+        "petBirthday": "13.08.2021",
+        "breed": "out of breed",
+        "price": "0",
+        "sex": "female",
+        "description": "Busya would be the perfect addition to an active family that loves to play and go on walks. I bet she would love having a doggy playmate too!",
+        "category": "for-free",
+        "location": "Ivano-Frankivsk",
+        "avatar": "https://cdn.superstock.com/4279/Comp/4279-29208.webp",
+        "favorite": [],
+        "owner": {
+          "id": "6470ad832cfa126519500989",
+          "email": "inga@mail.com",
+          "phone": "+38000000000"
+        }
+      },
+      {
+        "_id": "64722c22f6d32ff59de7c665",
+        "title": "Sell big preaty dog",
+        "name": "Borys",
+        "petBirthday": "14.12.2022",
+        "breed": "Spaniel",
+        "price": "200$",
+        "sex": "Famale",
+        "description": "Sell my preaty dog. 1 years old, He are good friend and nice.",
+        "category": "sell",
+        "location": "Belgorod",
+        "avatar": "https://i.guim.co.uk/img/media/03734ee186eba543fb3d0e35db2a90a14a5d79e3/0_173_5200_3120/master/5200.jpg?width=620&quality=85&dpr=1&s=none",
+        "favorite": [],
+        "owner": {
+          "id": "646f7ed3097a610ea1c91e7b",
+          "email": "mail_ann@gmail.com",
+          "phone": "+38000000000"
+        }
+      }
+    ]
+  }
+}
